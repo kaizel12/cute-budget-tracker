@@ -1,0 +1,228 @@
+/* Custom cute styling for CuteCuan */
+
+/* Wiggle animation for mascot */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.animate-wiggle {
+  animation: wiggle 2.5s ease-in-out infinite;
+}
+
+/* Floating background bubbles */
+.bubble {
+  position: absolute;
+  user-select: none;
+  opacity: 0.35;
+  filter: blur(0.5px);
+  animation: floatUp 14s infinite linear;
+}
+
+.dark .bubble {
+  opacity: 0.2;
+}
+
+.bubble-1 { left: 8%; bottom: -10%; font-size: 2rem; animation-duration: 18s; animation-delay: 0s; }
+.bubble-2 { left: 25%; bottom: -10%; font-size: 1.5rem; animation-duration: 15s; animation-delay: 3s; }
+.bubble-3 { left: 50%; bottom: -10%; font-size: 1.8rem; animation-duration: 20s; animation-delay: 5s; }
+.bubble-4 { left: 75%; bottom: -10%; font-size: 1.4rem; animation-duration: 16s; animation-delay: 2s; }
+.bubble-5 { left: 88%; bottom: -10%; font-size: 2.2rem; animation-duration: 22s; animation-delay: 7s; }
+.bubble-6 { left: 40%; bottom: -10%; font-size: 1.6rem; animation-duration: 19s; animation-delay: 4s; }
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.45;
+  }
+  80% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Tab button styling */
+.tab-btn {
+  padding: 0.6rem 0.5rem;
+  border-radius: 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  background: transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-btn:hover {
+  color: #f43f5e;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.dark .tab-btn {
+  color: #94a3b8;
+}
+
+.dark .tab-btn:hover {
+  color: #f472b6;
+  background-color: rgba(30, 41, 59, 0.8);
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: #ec4899;
+  box-shadow: 0 2px 8px -1px rgba(244, 114, 182, 0.25);
+}
+
+.dark .tab-btn.active {
+  background-color: #334155;
+  color: #f472b6;
+  box-shadow: 0 2px 8px -1px rgba(244, 114, 182, 0.35);
+}
+
+/* Filter pills */
+.filter-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: #ffe4ec;
+  color: #ec4899;
+  border-color: #fecddc;
+}
+
+.filter-btn.active {
+  background-color: #fce7f3;
+  color: #db2777;
+  border-color: #fbcfe8;
+  box-shadow: 0 1px 3px rgba(244, 114, 182, 0.15);
+}
+
+.dark .filter-btn {
+  color: #94a3b8;
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark .filter-btn:hover {
+  background-color: #334155;
+  color: #f472b6;
+  border-color: #ec4899;
+}
+
+.dark .filter-btn.active {
+  background-color: #831843;
+  color: #fbcfe8;
+  border-color: #db2777;
+}
+
+/* Emoji picker buttons */
+.emoji-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background-color: #f8fafc;
+  border: 2px solid #f1f5f9;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dark .emoji-btn {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.emoji-btn:hover {
+  transform: scale(1.08);
+  border-color: #fbcfe8;
+}
+
+.dark .emoji-btn:hover {
+  border-color: #f472b6;
+}
+
+.emoji-btn.active {
+  border-color: #ec4899;
+  background-color: #fdf2f8;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+  transform: scale(1.1);
+}
+
+.dark .emoji-btn.active {
+  border-color: #f472b6;
+  background-color: #4c1d3d;
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.3);
+}
+
+/* Custom scrollbar */
+.cute-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cute-scrollbar::-webkit-scrollbar-track {
+  background: #fdf2f8;
+  border-radius: 8px;
+}
+
+.cute-scrollbar::-webkit-scrollbar-thumb {
+  background: #fbcfe8;
+  border-radius: 8px;
+}
+
+.cute-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #f472b6;
+}
+
+.dark .cute-scrollbar::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark .cute-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark .cute-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Modal styling transition */
+#goalModal:not(.hidden), #depositModal:not(.hidden) {
+  display: flex;
+}
+
+#goalModal.open, #depositModal.open {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Card hover glow */
+.hover-cute-glow {
+  transition: all 0.25s ease;
+}
+
+.hover-cute-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.2), 0 8px 10px -6px rgba(56, 189, 248, 0.15);
+}

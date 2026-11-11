@@ -1,0 +1,12 @@
+{
+  "name": "cute-budget-tracker",
+  "version": "1.0.0",
+  "description": "Aplikasi Web Catat Pengeluaran, Pemasukan & Celengan Tabungan Lucu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["finance", "cute", "budget-tracker", "kawaii"],
+  "author": "",
+  "license": "ISC"
+}
