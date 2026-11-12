@@ -1,50 +1,13 @@
-/* Custom cute styling for CuteCuan */
+/* Custom cute styling for CuteCuan v2 */
 
-/* Wiggle animation for mascot */
+/* Gentle wiggle animation for mascot */
 @keyframes wiggle {
   0%, 100% { transform: rotate(-3deg); }
   50% { transform: rotate(3deg); }
 }
 
 .animate-wiggle {
-  animation: wiggle 2.5s ease-in-out infinite;
-}
-
-/* Floating background bubbles */
-.bubble {
-  position: absolute;
-  user-select: none;
-  opacity: 0.35;
-  filter: blur(0.5px);
-  animation: floatUp 14s infinite linear;
-}
-
-.dark .bubble {
-  opacity: 0.2;
-}
-
-.bubble-1 { left: 8%; bottom: -10%; font-size: 2rem; animation-duration: 18s; animation-delay: 0s; }
-.bubble-2 { left: 25%; bottom: -10%; font-size: 1.5rem; animation-duration: 15s; animation-delay: 3s; }
-.bubble-3 { left: 50%; bottom: -10%; font-size: 1.8rem; animation-duration: 20s; animation-delay: 5s; }
-.bubble-4 { left: 75%; bottom: -10%; font-size: 1.4rem; animation-duration: 16s; animation-delay: 2s; }
-.bubble-5 { left: 88%; bottom: -10%; font-size: 2.2rem; animation-duration: 22s; animation-delay: 7s; }
-.bubble-6 { left: 40%; bottom: -10%; font-size: 1.6rem; animation-duration: 19s; animation-delay: 4s; }
-
-@keyframes floatUp {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.45;
-  }
-  80% {
-    opacity: 0.45;
-  }
-  100% {
-    transform: translateY(-110vh) rotate(360deg);
-    opacity: 0;
-  }
+  animation: wiggle 3s ease-in-out infinite;
 }
 
 /* Tab button styling */
@@ -59,6 +22,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .tab-btn:hover {
@@ -87,6 +51,38 @@
   box-shadow: 0 2px 8px -1px rgba(244, 114, 182, 0.35);
 }
 
+/* Quick amount chips */
+.chip-btn {
+  padding: 0.3rem 0.65rem;
+  border-radius: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #db2777;
+  background-color: #fdf2f8;
+  border: 1px solid #fbcfe8;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.chip-btn:hover {
+  background-color: #fce7f3;
+  transform: translateY(-1px);
+}
+
+.chip-btn:active {
+  transform: scale(0.95);
+}
+
+.dark .chip-btn {
+  color: #f9a8d4;
+  background-color: rgba(131, 24, 67, 0.35);
+  border-color: rgba(219, 39, 119, 0.4);
+}
+
+.dark .chip-btn:hover {
+  background-color: rgba(131, 24, 67, 0.55);
+}
+
 /* Filter pills */
 .filter-btn {
   padding: 0.35rem 0.75rem;
@@ -97,6 +93,7 @@
   background-color: #f8fafc;
   border: 1px solid #f1f5f9;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .filter-btn:hover {
@@ -132,12 +129,12 @@
 
 /* Emoji picker buttons */
 .emoji-btn {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.4rem;
+  height: 2.4rem;
   border-radius: 0.75rem;
   background-color: #f8fafc;
   border: 2px solid #f1f5f9;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -163,7 +160,7 @@
   border-color: #ec4899;
   background-color: #fdf2f8;
   box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .dark .emoji-btn.active {
@@ -203,13 +200,14 @@
   background: #64748b;
 }
 
-/* Modal styling transition */
-#goalModal:not(.hidden), #depositModal:not(.hidden) {
+/* Modal animations */
+.modal-backdrop:not(.hidden) {
   display: flex;
+  animation: fadeIn 0.18s ease forwards;
 }
 
-#goalModal.open, #depositModal.open {
-  animation: fadeIn 0.2s ease forwards;
+.modal-backdrop.open .modal-card {
+  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes fadeIn {
@@ -217,12 +215,26 @@
   to { opacity: 1; }
 }
 
-/* Card hover glow */
-.hover-cute-glow {
-  transition: all 0.25s ease;
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.hover-cute-glow:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.2), 0 8px 10px -6px rgba(56, 189, 248, 0.15);
+/* Toast notifications */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(24px) scale(0.95); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to { opacity: 0; transform: translateX(24px) scale(0.95); }
+}
+
+.toast-enter {
+  animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-exit {
+  animation: toastOut 0.2s ease forwards;
 }

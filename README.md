@@ -1,53 +1,35 @@
-# CuteCuan 🌸✨ - Catatan Keuangan & Tabungan Gemas
+# CuteCuan 🌸✨ v2.0 - Catatan Keuangan & Tabungan Gemas
 
-Aplikasi web pencatat pengeluaran, pemasukan, dan tabungan dengan nuansa lucu, estetik, dan ceria berwarna **Pink Pastel & Sky Blue**.
+Aplikasi web pencatat pengeluaran, pemasukan, dan celengan tabungan bertema **Pink Pastel & Soft Blue** dengan dukungan **Mode Malam (Dark Kawaii Mode)** dan siap langsung dideploy ke **Vercel**!
 
-## 🎀 Fitur Unggulan
+## 🎀 Fitur Utama
 
-1. **Dashboard Kartu Lucu**:
-   - 💰 **Saldo Dompet**: Sisa uang yang siap dipakai.
-   - 🌸 **Pemasukan**: Total uang masuk beserta kategori & keterangannya.
-   - 🛍️ **Pengeluaran**: Total uang keluar/jajan dengan indikator warna manis.
-   - 🐷 **Celengan Tabungan**: Total tabungan yang telah kamu sisihkan secara aman.
+1. **Dashboard Ringkas & Rasio Tabungan**:
+   - 💰 **Saldo Dompet**, 🌸 **Pemasukan**, 🛍️ **Pengeluaran**, dan 🐷 **Celengan Tabungan** + **Rasio Tabungan (%)**.
+   - 📅 **Filter Periode Bulan**: Pantau keuangan per bulan tertentu atau semua periode sekaligus.
+   - 🚨 **Rem Jajan Bulanan**: Atur batas maksimal pengeluaran dan pantau statusnya lewat progress bar interaktif.
 
-2. **Pencatatan Cepat & Gemas**:
-   - Input otomatis format mata uang Rupiah (`Rp 50.000`).
-   - Pilihan kategori dengan emoji imut (Makanan 🍰, Belanja 🛍️, Transport 🛵, Gaji 💵, dll).
-   - Catatan / keterangan personal.
-   - Pilihan tanggal fleksibel.
+2. **Pencatatan Cepat & Edit Fleksibel**:
+   - **Chip Nominal Kilat** (`+10rb`, `+20rb`, `+50rb`, `+100rb`) + auto-format Rupiah.
+   - **Edit Catatan**: Ubah nominal, kategori, catatan, atau tanggal kapan saja tanpa harus hapus-ulang.
+   - Notifikasi *Toast* manis & modal konfirmasi kustom (bebas pop-up browser kaku).
 
-3. **Celengan & Target Impian (Piggy Goals)**:
-   - Buat target impian (misal: Beli Smartphone 📱, Nonton Konser 🎫, Liburan 🏖️).
-   - Progres bar dinamis dalam persentase.
-   - Tombol setor celengan langsung dengan efek confetti perayaan! 🎉
+3. **Celengan & Target Impian**:
+   - Buat target impian, **Setor** atau **Tarik** dana celengan, serta confetti perayaan otomatis saat menabung atau target tercapai 100% 🎉.
 
-4. **Grafik Statistik Keuangan (Chart.js)**:
-   - Grafik batang perbandingan Pemasukan vs Pengeluaran vs Tabungan.
-   - Grafik donat kategori pengeluaran dengan palet warna pastel.
+4. **Grafik Visual & Ekspor Data**:
+   - Grafik Batang perbandingan & Diagram Donat kategori pengeluaran (`Chart.js`).
+   - **Unduh Excel (CSV)** untuk dibuka di Microsoft Excel / Google Sheets.
+   - **Cadangkan & Pulihkan (Export/Import JSON)** agar data aman saat berpindah perangkat.
+   - **Mode Malam (🌙 / ☀️)** dengan penyimpanan otomatis di browser.
 
-5. **Riwayat & Pencarian**:
-   - Filter berdasarkan Semua / Pemasukan / Pengeluaran / Tabungan.
-   - Kolom pencarian teks instan.
-   - Hapus catatan dengan aman.
+## ☁️ Deploy ke Vercel
 
-6. **Penyimpanan Lokal (Offline Ready)**:
-   - Data otomatis tersimpan di LocalStorage browser tanpa butuh database/server eksternal.
-   - Fitur Cadangkan (Export JSON) & Reset Data.
+Proyek ini sudah dilengkapi `vercel.json` (`framework: null`, `buildCommand: null`, `outputDirectory: "."`) sehingga langsung siap jalan di **Vercel** tanpa error *build script* atau *output directory*!
 
-## 🚀 Cara Menjalankan
+## 🚀 Menjalankan Secara Lokal
 
-### Pilihan 1: Menggunakan Node.js (Rekomendasi)
-Buka terminal di folder ini, lalu jalankan:
 ```bash
 npm start
 ```
-atau
-```bash
-node server.js
-```
-Lalu buka browser di: [http://localhost:3000](http://localhost:3000)
-
----
-
-### Pilihan 2: Tanpa Node.js (Langsung Buka)
-Kamu bisa langsung klik dua kali file [index.html](file:///C:/Users/HP/.gemini/antigravity/scratch/cute-budget-tracker/index.html) untuk membukanya di browser favoritmu (Chrome, Edge, Firefox).
+Lalu buka [http://localhost:3000](http://localhost:3000) di browser, atau buka langsung file `index.html`.
