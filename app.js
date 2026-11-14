@@ -325,47 +325,47 @@
       const isReached = goal.currentAmount >= goal.targetAmount;
 
       const card = document.createElement('div');
-      card.className = 'p-3.5 rounded-2xl bg-white dark:bg-slate-900/60 border border-pink-100/80 dark:border-slate-700/60 shadow-2xs transition-all';
+      card.className = 'p-3.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-pink-200 dark:border-slate-700 shadow-xs transition-all';
       card.innerHTML = `
         <!-- Baris Atas: Ikon, Nama Barang, Harga & Tombol Aksi -->
         <div class="flex items-center justify-between gap-2 mb-2">
           <div class="flex items-center gap-2.5 min-w-0">
-            <span class="text-2xl p-1.5 rounded-xl bg-pink-50 dark:bg-slate-800 shrink-0 select-none">${escapeHtml(goal.emoji || '🎁')}</span>
+            <span class="text-2xl p-2 rounded-xl bg-pink-100 text-[#e11d48] dark:bg-slate-800 shrink-0 select-none">${escapeHtml(goal.emoji || '🎁')}</span>
             <div class="min-w-0">
-              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate flex items-center gap-1.5">
+              <h4 class="text-xs font-extrabold text-slate-800 dark:text-slate-100 truncate flex items-center gap-1.5">
                 <span>${escapeHtml(goal.title)}</span>
-                ${isReached ? '<span class="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 font-bold px-1.5 py-0.5 rounded-md shrink-0">Tercapai! 🎉</span>' : ''}
+                ${isReached ? '<span class="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold px-2 py-0.5 rounded-md shrink-0">Tercapai! 🎉</span>' : ''}
               </h4>
-              <p class="text-[11px] text-slate-400 mt-0.5">
-                Target Harga: <span class="font-bold text-slate-700 dark:text-slate-200">${formatRupiah(goal.targetAmount)}</span>
+              <p class="text-[11px] text-slate-500 font-semibold mt-0.5">
+                Target Harga: <span class="font-extrabold text-[#e11d48] dark:text-pink-300">${formatRupiah(goal.targetAmount)}</span>
               </p>
             </div>
           </div>
-          <div class="flex items-center gap-1 shrink-0">
-            <button class="btn-deposit-goal px-2.5 py-1.5 bg-gradient-to-r from-[#f472b6] to-[#38bdf8] hover:opacity-95 text-white rounded-xl text-[10px] font-bold transition-all active:scale-95 cursor-pointer shadow-2xs">
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button class="btn-deposit-goal px-3 py-1.5 bg-[#0284c7] hover:bg-[#0369a1] text-white rounded-xl text-xs font-extrabold transition-all active:scale-95 cursor-pointer shadow-xs">
               + Sisihkan
             </button>
-            <button class="btn-delete-goal p-1 text-slate-300 hover:text-rose-400 rounded-lg text-xs transition-colors cursor-pointer" data-id="${escapeHtml(goal.id)}" title="Hapus target">
+            <button class="btn-delete-goal p-1 text-slate-300 hover:text-rose-500 rounded-lg text-xs transition-colors cursor-pointer" data-id="${escapeHtml(goal.id)}" title="Hapus target">
               <i class="fa-regular fa-trash-can"></i>
             </button>
           </div>
         </div>
 
-        <!-- Progress Bar Gemas -->
-        <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden p-0.5 border border-pink-100/40 dark:border-slate-600">
-          <div class="bg-gradient-to-r from-[#f472b6] to-[#38bdf8] h-full rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
+        <!-- Progress Bar Solid Warna Pink Jelas -->
+        <div class="w-full bg-pink-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden p-0.5 border border-pink-200 dark:border-slate-600">
+          <div class="bg-[#ff6b95] h-full rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
         </div>
 
-        <!-- Baris Bawah: Terkumpul & SISA BERAPA LAGI (Sangat Jelas & Memotivasi) -->
-        <div class="flex items-center justify-between text-[11px] font-semibold mt-2 pt-1 border-t border-slate-100 dark:border-slate-800 flex-wrap gap-1">
-          <span class="text-slate-500 dark:text-slate-400">
-            Terkumpul: <b class="text-[#0284c7] dark:text-sky-300">${formatRupiah(goal.currentAmount)}</b> (${percentage}%)
+        <!-- Baris Bawah: Terkumpul & SISA BERAPA LAGI (Solid & High Contrast) -->
+        <div class="flex items-center justify-between text-xs font-bold mt-2.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 flex-wrap gap-1">
+          <span class="text-slate-600 dark:text-slate-400">
+            Terkumpul: <b class="text-[#0284c7] dark:text-sky-300 font-extrabold">${formatRupiah(goal.currentAmount)}</b> (${percentage}%)
           </span>
           ${remaining > 0 
-            ? `<span class="px-2 py-0.5 rounded-lg bg-pink-50 dark:bg-pink-950/70 text-[#ec4899] dark:text-pink-300 font-bold text-[10px]">
-                Kurang <b class="font-extrabold text-[#db2777] dark:text-pink-200">${formatRupiah(remaining)}</b> lagi! ⏳
+            ? `<span class="px-2.5 py-1 rounded-xl bg-[#ffe4ec] dark:bg-pink-950 text-[#be123c] dark:text-pink-200 font-extrabold text-[11px] border border-pink-300">
+                Kurang <b class="font-black text-[#e11d48]">${formatRupiah(remaining)}</b> lagi! ⏳
                </span>`
-            : `<span class="px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/70 text-[#0284c7] dark:text-sky-300 font-bold text-[10px]">
+            : `<span class="px-2.5 py-1 rounded-xl bg-sky-100 dark:bg-sky-950 text-[#0284c7] dark:text-sky-300 font-extrabold text-[11px] border border-sky-300">
                 Uang Sudah Cukup! Siap Dibeli ✨
                </span>`
           }
@@ -423,42 +423,42 @@
 
     filtered.forEach(tx => {
       const item = document.createElement('div');
-      item.className = 'p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-2.5 group';
+      item.className = 'p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200/80 dark:border-slate-700 flex items-center justify-between gap-3 shadow-2xs transition-all';
 
       const isIncome = tx.type === 'income';
       const badgeIcon = isIncome
-        ? '<span class="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-950/70 text-[#0284c7] dark:text-sky-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-down"></i></span>'
-        : '<span class="w-7 h-7 rounded-lg bg-pink-100 dark:bg-pink-950/70 text-[#ec4899] dark:text-pink-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-up"></i></span>';
+        ? '<span class="w-8 h-8 rounded-xl bg-[#e0f2fe] text-[#0284c7] border border-[#bae6fd] flex items-center justify-center text-xs font-black shrink-0"><i class="fa-solid fa-arrow-down"></i></span>'
+        : '<span class="w-8 h-8 rounded-xl bg-[#ffe4ec] text-[#e11d48] border border-[#fecddc] flex items-center justify-center text-xs font-black shrink-0"><i class="fa-solid fa-arrow-up"></i></span>';
 
       const amountText = (isIncome ? '+ ' : '- ') + formatRupiah(tx.amount);
-      const amountClass = isIncome ? 'text-[#0284c7] dark:text-sky-400' : 'text-[#ec4899] dark:text-pink-400';
+      const amountClass = isIncome ? 'text-[#0284c7] font-black' : 'text-[#e11d48] font-black';
 
       const dateFormatted = tx.date
         ? new Date(tx.date + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
         : 'Hari ini';
 
       item.innerHTML = `
-        <div class="flex items-center gap-2.5 min-w-0">
+        <div class="flex items-center gap-3 min-w-0">
           ${badgeIcon}
           <div class="min-w-0">
-            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">${escapeHtml(tx.notes || tx.categoryLabel)}</h4>
-            <div class="flex items-center gap-1.5 text-[10px] text-slate-400">
+            <h4 class="text-xs font-extrabold text-slate-800 dark:text-slate-100 truncate">${escapeHtml(tx.notes || tx.categoryLabel)}</h4>
+            <div class="flex items-center gap-1.5 text-[11px] text-slate-500 font-semibold mt-0.5">
               <span class="truncate">${escapeHtml(tx.categoryLabel || 'Lainnya')}</span>
               <span>•</span>
-              <span class="shrink-0">${escapeHtml(dateFormatted)}</span>
+              <span class="shrink-0 text-slate-400">${escapeHtml(dateFormatted)}</span>
             </div>
           </div>
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
-          <span class="text-xs font-bold ${amountClass}">
+          <span class="text-xs sm:text-sm ${amountClass}">
             ${amountText}
           </span>
-          <button class="btn-edit-tx text-slate-300 hover:text-sky-500 p-1 rounded-md transition-colors cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Ubah">
-            <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+          <button class="btn-edit-tx text-slate-400 hover:text-[#0284c7] p-1.5 rounded-lg hover:bg-sky-50 transition-colors cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Ubah">
+            <i class="fa-regular fa-pen-to-square text-xs"></i>
           </button>
-          <button class="btn-delete-tx text-slate-300 hover:text-rose-400 p-1 rounded-md transition-colors cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Hapus">
-            <i class="fa-regular fa-trash-can text-[11px]"></i>
+          <button class="btn-delete-tx text-slate-400 hover:text-rose-500 p-1.5 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Hapus">
+            <i class="fa-regular fa-trash-can text-xs"></i>
           </button>
         </div>
       `;
@@ -730,12 +730,18 @@
     attachCurrencyMask(inputDepositAmount);
     attachCurrencyMask(inputEditTxAmount);
 
+    const submitBtn = document.getElementById('submitBtn');
+
     // Toggle: Pemasukan vs Pengeluaran
     tabIncome.addEventListener('click', () => {
       tabIncome.classList.add('active');
       tabExpense.classList.remove('active');
       inputTxType.value = 'income';
       populateCategorySelect(selectTxCategory, 'income');
+      if (submitBtn) {
+        submitBtn.className = 'w-full py-3 px-4 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white font-extrabold text-xs tracking-wider uppercase shadow-md shadow-sky-200 dark:shadow-none active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer';
+        submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i><span>Simpan Pemasukan</span>';
+      }
     });
 
     tabExpense.addEventListener('click', () => {
@@ -743,6 +749,10 @@
       tabIncome.classList.remove('active');
       inputTxType.value = 'expense';
       populateCategorySelect(selectTxCategory, 'expense');
+      if (submitBtn) {
+        submitBtn.className = 'w-full py-3 px-4 rounded-xl bg-[#ff6b95] hover:bg-[#e11d48] text-white font-extrabold text-xs tracking-wider uppercase shadow-md shadow-pink-200 dark:shadow-none active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer';
+        submitBtn.innerHTML = '<i class="fa-solid fa-minus"></i><span>Simpan Pengeluaran</span>';
+      }
     });
 
     // Form Catat Transaksi Baru

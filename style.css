@@ -1,4 +1,4 @@
-/* CuteCuan v3.1 - Harmonized Pastel Pink & Blue */
+/* CuteCuan v4 - Solid Kawaii Color Blocking (Pink & Sky Blue) */
 
 /* Gentle wiggle animation for mascot */
 @keyframes wiggle {
@@ -10,12 +10,12 @@
   animation: wiggle 3.5s ease-in-out infinite;
 }
 
-/* Tab button styling */
+/* Tab button styling: Solid, Clear, Distinct */
 .tab-btn {
-  padding: 0.55rem 0.5rem;
+  padding: 0.65rem 0.6rem;
   border-radius: 0.85rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #64748b;
   background: transparent;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -29,54 +29,43 @@
   color: #94a3b8;
 }
 
-/* Tab: Pemasukan Active (Pastel Blue) */
+/* Tab: Pemasukan Active (Solid Vibrant Sky Blue) */
 .tab-btn.income-tab.active {
-  background-color: #e0f2fe;
-  color: #0284c7;
-  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.15);
+  background-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
 }
 
-.dark .tab-btn.income-tab.active {
-  background-color: #075985;
-  color: #7dd3fc;
-  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3);
-}
-
-/* Tab: Pengeluaran Active (Pastel Pink) */
+/* Tab: Pengeluaran Active (Solid Vibrant Strawberry Pink) */
 .tab-btn.expense-tab.active {
-  background-color: #fce7f3;
-  color: #db2777;
-  box-shadow: 0 1px 3px rgba(219, 39, 119, 0.15);
-}
-
-.dark .tab-btn.expense-tab.active {
-  background-color: #831843;
-  color: #fbcfe8;
-  box-shadow: 0 1px 3px rgba(219, 39, 119, 0.3);
+  background-color: #ff6b95 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 149, 0.3);
 }
 
 /* Filter pills */
 .filter-btn {
-  padding: 0.3rem 0.65rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 0.75rem;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #64748b;
   background-color: transparent;
-  border: 1px solid transparent;
+  border: 1.5px solid transparent;
   transition: all 0.15s ease;
   cursor: pointer;
 }
 
 .filter-btn:hover {
-  color: #ec4899;
-  background-color: #fff0f5;
+  color: #e11d48;
+  background-color: #ffe4ec;
 }
 
 .filter-btn.active {
-  background-color: #fce7f3;
-  color: #db2777;
-  border-color: #fbcfe8;
+  background-color: #ff6b95 !important;
+  color: #ffffff !important;
+  border-color: #ff6b95 !important;
+  box-shadow: 0 2px 6px rgba(255, 107, 149, 0.25);
 }
 
 .dark .filter-btn {
@@ -85,23 +74,23 @@
 
 .dark .filter-btn:hover {
   background-color: #1e293b;
-  color: #f472b6;
+  color: #ff6b95;
 }
 
 .dark .filter-btn.active {
-  background-color: #831843;
-  color: #fbcfe8;
-  border-color: #db2777;
+  background-color: #ff6b95 !important;
+  color: #ffffff !important;
+  border-color: #ff6b95 !important;
 }
 
 /* Emoji picker buttons */
 .emoji-btn {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2.3rem;
+  height: 2.3rem;
   border-radius: 0.75rem;
-  background-color: #fdf2f8;
-  border: 1.5px solid #fbcfe8;
-  font-size: 1.1rem;
+  background-color: #fff0f5;
+  border: 2px solid #ffb3c6;
+  font-size: 1.15rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,24 +104,25 @@
 }
 
 .emoji-btn:hover {
-  transform: scale(1.06);
-  border-color: #f472b6;
+  transform: scale(1.08);
+  border-color: #ff6b95;
 }
 
 .emoji-btn.active {
-  border-color: #ec4899;
-  background-color: #fce7f3;
-  transform: scale(1.06);
+  border-color: #e11d48 !important;
+  background-color: #ffe4ec !important;
+  transform: scale(1.08);
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
 }
 
 .dark .emoji-btn.active {
-  border-color: #f472b6;
-  background-color: #4c1d3d;
+  border-color: #ff6b95 !important;
+  background-color: #4c1d3d !important;
 }
 
 /* Custom scrollbar */
 .cute-scrollbar::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
 
 .cute-scrollbar::-webkit-scrollbar-track {
@@ -140,7 +130,7 @@
 }
 
 .cute-scrollbar::-webkit-scrollbar-thumb {
-  background: #fbcfe8;
+  background: #ffb3c6;
   border-radius: 8px;
 }
 
@@ -149,7 +139,7 @@
 }
 
 .cute-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #f472b6;
+  background: #ff6b95;
 }
 
 /* Modal backdrop & card animation */
