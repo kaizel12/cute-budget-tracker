@@ -21,15 +21,15 @@
             quicksand: ['Quicksand', 'sans-serif'],
           },
           colors: {
-            cutePink: {
-              50: '#fff5f8',
+            brandPink: {
+              50: '#fff0f5',
               100: '#ffe4ec',
               200: '#fecddc',
               300: '#fca5c2',
-              400: '#f6729e',
-              500: '#ec4883',
+              400: '#f472b6',
+              500: '#ec4899',
             },
-            cuteBlue: {
+            brandBlue: {
               50: '#f0f9ff',
               100: '#e0f2fe',
               200: '#bae6fd',
@@ -52,21 +52,21 @@
 
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="font-quicksand bg-slate-50 dark:bg-[#0c1222] min-h-screen text-slate-700 dark:text-slate-100 antialiased selection:bg-pink-300 selection:text-white transition-colors duration-200">
+<body class="font-quicksand bg-gradient-to-br from-[#fff2f6] via-[#fbf7fd] to-[#f0f8ff] dark:from-[#0b0f19] dark:via-[#111728] dark:to-[#0d1424] min-h-screen text-slate-700 dark:text-slate-100 antialiased selection:bg-pink-200 selection:text-pink-800 transition-colors duration-200">
 
   <!-- Toast Notification Container -->
   <div id="toastContainer" class="fixed top-5 right-5 z-[70] flex flex-col gap-2 max-w-xs w-full pointer-events-none"></div>
 
   <div class="max-w-4xl mx-auto px-4 py-6 sm:py-8">
 
-    <!-- Header Bersih & Rapi -->
+    <!-- Header Bersih & Lembut -->
     <header class="flex items-center justify-between gap-4 mb-6">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-400 to-sky-300 flex items-center justify-center text-2xl shadow-sm animate-wiggle shrink-0">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#f472b6] to-[#38bdf8] flex items-center justify-center text-2xl shadow-sm shadow-pink-200 dark:shadow-none animate-wiggle shrink-0">
           🐷
         </div>
         <div>
-          <h1 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-500 to-sky-500 bg-clip-text text-transparent">
+          <h1 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#ec4899] via-[#d946ef] to-[#0ea5e9] bg-clip-text text-transparent">
             CuteCuan
           </h1>
           <p class="text-xs text-slate-400 font-medium" id="currentDate">Catatan Tabungan Harian 💕</p>
@@ -75,35 +75,35 @@
 
       <!-- Quick Action Buttons -->
       <div class="flex items-center gap-1.5">
-        <button id="btnThemeToggle" title="Ganti Mode Malam/Terang" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 text-slate-600 dark:text-amber-300 hover:border-pink-300 flex items-center justify-center transition-all cursor-pointer text-sm shadow-xs">
+        <button id="btnThemeToggle" title="Ganti Mode Malam/Terang" class="w-9 h-9 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-pink-100 dark:border-slate-700 text-slate-600 dark:text-amber-300 hover:border-pink-300 hover:text-pink-500 flex items-center justify-center transition-all cursor-pointer text-sm shadow-2xs">
           <span id="themeIcon">🌙</span>
         </button>
-        <button id="btnExport" title="Cadangkan Data" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-sky-300 flex items-center justify-center transition-all cursor-pointer text-sm shadow-xs">
+        <button id="btnExport" title="Cadangkan Data" class="w-9 h-9 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-pink-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-sky-300 hover:text-sky-500 flex items-center justify-center transition-all cursor-pointer text-sm shadow-2xs">
           <i class="fa-solid fa-download"></i>
         </button>
-        <button id="btnImport" title="Pulihkan Data" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-emerald-300 flex items-center justify-center transition-all cursor-pointer text-sm shadow-xs">
+        <button id="btnImport" title="Pulihkan Data" class="w-9 h-9 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-pink-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-emerald-300 hover:text-emerald-500 flex items-center justify-center transition-all cursor-pointer text-sm shadow-2xs">
           <i class="fa-solid fa-file-import"></i>
         </button>
         <input type="file" id="importFileInput" accept=".json" class="hidden">
-        <button id="btnReset" title="Reset Semua Data" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 text-slate-400 hover:text-rose-500 hover:border-rose-300 flex items-center justify-center transition-all cursor-pointer text-sm shadow-xs">
+        <button id="btnReset" title="Reset Semua Data" class="w-9 h-9 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-pink-100 dark:border-slate-700 text-slate-400 hover:text-rose-500 hover:border-rose-300 flex items-center justify-center transition-all cursor-pointer text-sm shadow-2xs">
           <i class="fa-solid fa-trash-can"></i>
         </button>
       </div>
     </header>
 
-    <!-- HERO CARD: JUMLAH TABUNGAN UTAMA (Logika Inti: Tabungan = Pemasukan - Pengeluaran) -->
-    <section class="bg-gradient-to-br from-pink-400 via-rose-400 to-sky-400 rounded-3xl p-6 sm:p-7 text-white shadow-md shadow-pink-200/40 dark:shadow-none mb-6 relative overflow-hidden">
-      <!-- Subtle Decorative Icon -->
+    <!-- HERO CARD: JUMLAH TABUNGAN (Soft Cotton Candy Pink & Sky Blue) -->
+    <section class="bg-gradient-to-r from-[#f472b6] via-[#ec4899] to-[#38bdf8] rounded-3xl p-6 sm:p-7 text-white shadow-lg shadow-pink-200/50 dark:shadow-none mb-6 relative overflow-hidden">
+      <!-- Subtle Decorative Piggy -->
       <div class="absolute -right-3 -bottom-5 text-8xl opacity-15 pointer-events-none select-none">
         🐖
       </div>
 
       <div class="relative z-10">
         <div class="flex items-center justify-between mb-1">
-          <span class="text-xs sm:text-sm font-semibold text-pink-100 flex items-center gap-1.5 uppercase tracking-wider">
+          <span class="text-xs sm:text-sm font-bold text-white/90 flex items-center gap-1.5 uppercase tracking-wider">
             <span>✨</span> Jumlah Tabungan Saat Ini
           </span>
-          <span id="savingsStatusText" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-sm">
+          <span id="savingsStatusText" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-xs text-white">
             Semangat Nabung 🌸
           </span>
         </div>
@@ -112,25 +112,25 @@
           Rp 0
         </div>
 
-        <p class="text-xs text-pink-100/90 mb-5">
-          Semua pemasukan otomatis masuk ke tabungan, dan pengeluaran memotong saldo tabunganmu.
+        <p class="text-xs text-white/90 mb-5">
+          Uang masuk otomatis menambah tabunganmu, pengeluaran memotong saldo tabunganmu.
         </p>
 
         <!-- Sub Ringkasan Pemasukan & Pengeluaran -->
-        <div class="grid grid-cols-2 gap-3 pt-3 border-t border-white/20">
-          <div class="bg-white/15 backdrop-blur-xs p-3 rounded-2xl">
-            <span class="text-[11px] font-semibold text-pink-100 flex items-center gap-1">
-              <i class="fa-solid fa-arrow-down text-emerald-300"></i> Total Pemasukan (+)
+        <div class="grid grid-cols-2 gap-3 pt-3 border-t border-white/25">
+          <div class="bg-white/20 backdrop-blur-xs p-3 rounded-2xl border border-white/25">
+            <span class="text-[11px] font-bold text-white/90 flex items-center gap-1">
+              <i class="fa-solid fa-arrow-down text-sky-100"></i> Pemasukan (+)
             </span>
-            <div class="text-base sm:text-lg font-bold text-white mt-0.5 truncate" id="totalIncome">
+            <div class="text-base sm:text-lg font-extrabold text-white mt-0.5 truncate" id="totalIncome">
               Rp 0
             </div>
           </div>
-          <div class="bg-white/15 backdrop-blur-xs p-3 rounded-2xl">
-            <span class="text-[11px] font-semibold text-pink-100 flex items-center gap-1">
-              <i class="fa-solid fa-arrow-up text-rose-200"></i> Total Pengeluaran (-)
+          <div class="bg-white/20 backdrop-blur-xs p-3 rounded-2xl border border-white/25">
+            <span class="text-[11px] font-bold text-white/90 flex items-center gap-1">
+              <i class="fa-solid fa-arrow-up text-pink-100"></i> Pengeluaran (-)
             </span>
-            <div class="text-base sm:text-lg font-bold text-white mt-0.5 truncate" id="totalExpense">
+            <div class="text-base sm:text-lg font-extrabold text-white mt-0.5 truncate" id="totalExpense">
               Rp 0
             </div>
           </div>
@@ -145,18 +145,18 @@
       <div class="md:col-span-5 space-y-6">
 
         <!-- Form Pencatatan Cepat -->
-        <div class="bg-white dark:bg-slate-800/90 p-5 rounded-3xl border border-slate-200/70 dark:border-slate-700 shadow-xs">
+        <div class="bg-white/90 dark:bg-slate-800/90 p-5 rounded-3xl border border-pink-100/80 dark:border-slate-700/80 shadow-sm shadow-pink-100/30 dark:shadow-none">
           <h2 class="text-sm font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
             <span>✍️</span> Catat Uang
           </h2>
 
-          <!-- Toggle: Pemasukan vs Pengeluaran -->
-          <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-2xl mb-4 text-xs font-bold">
-            <button type="button" id="tabIncome" class="tab-btn active" data-type="income">
-              <i class="fa-solid fa-arrow-down text-emerald-500 mr-1.5"></i> Pemasukan (+)
+          <!-- Toggle: Pemasukan vs Pengeluaran (Harmonized Blue vs Pink) -->
+          <div class="grid grid-cols-2 gap-1.5 p-1 bg-pink-50/50 dark:bg-slate-900 rounded-2xl mb-4 text-xs font-bold border border-pink-100/50 dark:border-slate-800">
+            <button type="button" id="tabIncome" class="tab-btn active income-tab" data-type="income">
+              <i class="fa-solid fa-arrow-down mr-1.5"></i> Pemasukan (+)
             </button>
-            <button type="button" id="tabExpense" class="tab-btn" data-type="expense">
-              <i class="fa-solid fa-arrow-up text-pink-500 mr-1.5"></i> Pengeluaran (-)
+            <button type="button" id="tabExpense" class="tab-btn expense-tab" data-type="expense">
+              <i class="fa-solid fa-arrow-up mr-1.5"></i> Pengeluaran (-)
             </button>
           </div>
 
@@ -176,7 +176,7 @@
                   inputmode="numeric" 
                   placeholder="0" 
                   required
-                  class="w-full pl-11 pr-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-base font-bold focus:outline-none focus:border-pink-400 transition-colors"
+                  class="w-full pl-11 pr-3.5 py-2.5 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-slate-800 dark:text-white text-base font-bold focus:outline-none focus:border-pink-400 focus:ring-3 focus:ring-pink-100/60 dark:focus:ring-pink-950/40 transition-all"
                 >
               </div>
             </div>
@@ -188,7 +188,7 @@
               </label>
               <select 
                 id="txCategory" 
-                class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-pink-400 transition-colors cursor-pointer"
+                class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-pink-400 focus:ring-3 focus:ring-pink-100/60 dark:focus:ring-pink-950/40 transition-all cursor-pointer"
               ></select>
             </div>
 
@@ -203,7 +203,7 @@
                 placeholder="Misal: Gaji, Jajan bakso, Tabungan..." 
                 maxlength="60" 
                 required
-                class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-white focus:outline-none focus:border-pink-400 transition-colors font-medium"
+                class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs text-slate-700 dark:text-white focus:outline-none focus:border-pink-400 focus:ring-3 focus:ring-pink-100/60 dark:focus:ring-pink-950/40 transition-all font-medium"
               >
             </div>
 
@@ -216,28 +216,28 @@
                 type="date" 
                 id="txDate" 
                 required
-                class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-white focus:outline-none focus:border-pink-400 transition-colors font-medium"
+                class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs text-slate-700 dark:text-white focus:outline-none focus:border-pink-400 focus:ring-3 focus:ring-pink-100/60 dark:focus:ring-pink-950/40 transition-all font-medium"
               >
             </div>
 
             <button 
               type="submit" 
               id="submitBtn"
-              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-500 to-sky-400 hover:opacity-95 text-white font-bold text-xs tracking-wide shadow-xs active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#f472b6] to-[#38bdf8] hover:opacity-95 text-white font-bold text-xs tracking-wide shadow-md shadow-pink-200/50 dark:shadow-none active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <i class="fa-solid fa-plus"></i>
+              <i class="fa-solid fa-heart"></i>
               <span>Simpan Catatan</span>
             </button>
           </form>
         </div>
 
         <!-- Celengan Target Impian (Clean & Compact) -->
-        <div class="bg-white dark:bg-slate-800/90 p-5 rounded-3xl border border-slate-200/70 dark:border-slate-700 shadow-xs">
+        <div class="bg-white/90 dark:bg-slate-800/90 p-5 rounded-3xl border border-sky-100/80 dark:border-slate-700/80 shadow-sm shadow-sky-100/30 dark:shadow-none">
           <div class="flex items-center justify-between mb-3">
             <h2 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
-              <span>🎯</span> Target Tabungan Impian
+              <span>🎯</span> Target Impian
             </h2>
-            <button id="btnOpenGoalModal" class="text-[11px] font-bold text-pink-500 hover:text-pink-600 dark:text-pink-400 transition-colors flex items-center gap-1 cursor-pointer">
+            <button id="btnOpenGoalModal" class="text-[11px] font-bold text-[#0284c7] hover:text-[#0369a1] dark:text-sky-300 transition-colors flex items-center gap-1 cursor-pointer">
               <i class="fa-solid fa-plus"></i> Tambah
             </button>
           </div>
@@ -253,12 +253,12 @@
       <div class="md:col-span-7 space-y-6">
 
         <!-- Riwayat Transaksi -->
-        <div class="bg-white dark:bg-slate-800/90 p-5 rounded-3xl border border-slate-200/70 dark:border-slate-700 shadow-xs">
+        <div class="bg-white/90 dark:bg-slate-800/90 p-5 rounded-3xl border border-pink-100/80 dark:border-slate-700/80 shadow-sm shadow-pink-100/30 dark:shadow-none">
           <div class="flex items-center justify-between gap-2 mb-3">
             <h2 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
-              <span>📜</span> Riwayat Mutasi Tabungan
+              <span>📜</span> Mutasi Tabungan
             </h2>
-            <button id="btnExportCsv" title="Unduh CSV" class="text-[11px] font-bold text-sky-500 hover:text-sky-600 dark:text-sky-400 flex items-center gap-1 cursor-pointer">
+            <button id="btnExportCsv" title="Unduh CSV" class="text-[11px] font-bold text-[#0284c7] hover:text-[#0369a1] dark:text-sky-300 flex items-center gap-1 cursor-pointer">
               <i class="fa-solid fa-file-csv"></i> Unduh CSV
             </button>
           </div>
@@ -275,7 +275,7 @@
                 type="text" 
                 id="searchTx" 
                 placeholder="Cari..." 
-                class="w-full pl-7 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-pink-300 font-medium"
+                class="w-full pl-7 pr-3 py-1.5 text-xs rounded-xl bg-pink-50/20 dark:bg-slate-900 border border-pink-200/60 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-pink-300 font-medium"
               >
               <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
             </div>
@@ -288,7 +288,7 @@
 
           <!-- Empty State -->
           <div id="emptyTxState" class="hidden text-center py-10 px-4">
-            <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-pink-100 dark:bg-slate-700 text-2xl flex items-center justify-center">
+            <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-pink-100/80 dark:bg-slate-700 text-2xl flex items-center justify-center">
               🐱
             </div>
             <p class="text-xs font-bold text-slate-700 dark:text-slate-300">Belum ada catatan nih~</p>
@@ -297,13 +297,13 @@
         </div>
 
         <!-- Grafik Visual Sederhana -->
-        <div class="bg-white dark:bg-slate-800/90 p-5 rounded-3xl border border-slate-200/70 dark:border-slate-700 shadow-xs">
+        <div class="bg-white/90 dark:bg-slate-800/90 p-5 rounded-3xl border border-sky-100/80 dark:border-slate-700/80 shadow-sm shadow-sky-100/30 dark:shadow-none">
           <div class="flex items-center justify-between gap-2 mb-3">
             <h2 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
               <span>📊</span> Grafik Keuangan
             </h2>
-            <div class="flex gap-1 p-0.5 bg-slate-100 dark:bg-slate-900 rounded-lg text-[11px] font-bold">
-              <button id="chartTabSummary" class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-pink-500 cursor-pointer">Perbandingan</button>
+            <div class="flex gap-1 p-0.5 bg-sky-50/50 dark:bg-slate-900 rounded-lg text-[11px] font-bold border border-sky-100/60 dark:border-slate-800">
+              <button id="chartTabSummary" class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-[#0284c7] dark:text-sky-300 cursor-pointer">Perbandingan</button>
               <button id="chartTabCategory" class="px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 cursor-pointer">Kategori</button>
             </div>
           </div>
@@ -328,8 +328,8 @@
   </div>
 
   <!-- MODAL: Target Baru -->
-  <div id="goalModal" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs items-center justify-center p-4 z-50 hidden">
-    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-xl border border-slate-200 dark:border-slate-700">
+  <div id="goalModal" class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-xs items-center justify-center p-4 z-50 hidden">
+    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-xl border border-pink-100 dark:border-slate-700">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
           <span>🌟</span> Target Impian Baru
@@ -342,7 +342,7 @@
       <form id="goalForm" class="space-y-3">
         <div>
           <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Nama Target</label>
-          <input type="text" id="goalTitle" placeholder="Misal: Beli Sepatu, Liburan..." required class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+          <input type="text" id="goalTitle" placeholder="Misal: Beli Sepatu, Liburan..." required class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
         </div>
 
         <div>
@@ -362,21 +362,21 @@
           <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Target Nominal (Rp)</label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">Rp</span>
-            <input type="text" id="goalTargetAmount" inputmode="numeric" placeholder="0" required class="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+            <input type="text" id="goalTargetAmount" inputmode="numeric" placeholder="0" required class="w-full pl-9 pr-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
           </div>
         </div>
 
         <div class="flex gap-2 pt-1">
           <button type="button" id="btnCancelGoal" class="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs cursor-pointer">Batal</button>
-          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-pink-400 to-sky-400 text-white font-bold text-xs shadow-xs cursor-pointer">Simpan ✨</button>
+          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-[#f472b6] to-[#38bdf8] text-white font-bold text-xs shadow-xs cursor-pointer">Simpan ✨</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL: Alokasi / Tabung ke Target Impian -->
-  <div id="depositModal" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs items-center justify-center p-4 z-50 hidden">
-    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-xl border border-slate-200 dark:border-slate-700">
+  <div id="depositModal" class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-xs items-center justify-center p-4 z-50 hidden">
+    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-xl border border-sky-100 dark:border-slate-700">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
           <span>🐷</span> Alokasi Tabungan ke Target
@@ -394,21 +394,21 @@
           <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Nominal Disisihkan (Rp)</label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">Rp</span>
-            <input type="text" id="depositAmount" inputmode="numeric" placeholder="0" required class="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+            <input type="text" id="depositAmount" inputmode="numeric" placeholder="0" required class="w-full pl-9 pr-3 py-2 rounded-xl bg-sky-50/40 dark:bg-slate-900 border border-sky-200/80 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-sky-400">
           </div>
         </div>
 
         <div class="flex gap-2 pt-1">
           <button type="button" id="btnCancelDeposit" class="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs cursor-pointer">Batal</button>
-          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-pink-400 to-sky-400 text-white font-bold text-xs shadow-xs cursor-pointer">Sisihkan 🪙</button>
+          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-[#38bdf8] to-[#f472b6] text-white font-bold text-xs shadow-xs cursor-pointer">Sisihkan 🪙</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL: Edit Transaksi -->
-  <div id="editTxModal" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs items-center justify-center p-4 z-50 hidden">
-    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-xl border border-slate-200 dark:border-slate-700">
+  <div id="editTxModal" class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-xs items-center justify-center p-4 z-50 hidden">
+    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-xl border border-pink-100 dark:border-slate-700">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
           <span>✏️</span> Ubah Catatan
@@ -424,40 +424,40 @@
           <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Nominal (Rp)</label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">Rp</span>
-            <input type="text" id="editTxAmount" inputmode="numeric" required class="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+            <input type="text" id="editTxAmount" inputmode="numeric" required class="w-full pl-9 pr-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
           </div>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Kategori</label>
-          <select id="editTxCategory" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-pink-400"></select>
+          <select id="editTxCategory" class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-pink-400"></select>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Catatan</label>
-          <input type="text" id="editTxNotes" maxlength="60" required class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+          <input type="text" id="editTxNotes" maxlength="60" required class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Tanggal</label>
-          <input type="date" id="editTxDate" required class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+          <input type="date" id="editTxDate" required class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
         </div>
         <div class="flex gap-2 pt-1">
           <button type="button" id="btnCancelEditTx" class="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs cursor-pointer">Batal</button>
-          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-pink-400 to-sky-400 text-white font-bold text-xs shadow-xs cursor-pointer">Simpan ✨</button>
+          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-[#f472b6] to-[#38bdf8] text-white font-bold text-xs shadow-xs cursor-pointer">Simpan ✨</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL: Konfirmasi Manis -->
-  <div id="confirmModal" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-xs items-center justify-center p-4 z-[60] hidden">
-    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-xs w-full p-5 shadow-xl border border-slate-200 dark:border-slate-700 text-center">
-      <div class="w-10 h-10 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-500 mx-auto mb-2 flex items-center justify-center text-xl">
+  <div id="confirmModal" class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-xs items-center justify-center p-4 z-[60] hidden">
+    <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-xs w-full p-5 shadow-xl border border-pink-100 dark:border-slate-700 text-center">
+      <div class="w-10 h-10 rounded-2xl bg-pink-100 text-[#ec4899] mx-auto mb-2 flex items-center justify-center text-xl">
         🥺
       </div>
       <h3 class="text-sm font-bold text-slate-800 dark:text-white mb-1" id="confirmTitle">Konfirmasi</h3>
       <p class="text-xs text-slate-500 dark:text-slate-400 mb-4" id="confirmMessage">Yakin ingin melanjutkan?</p>
       <div class="flex gap-2">
         <button id="confirmCancelBtn" class="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs cursor-pointer">Batal</button>
-        <button id="confirmOkBtn" class="flex-1 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs cursor-pointer">Ya, Lanjut</button>
+        <button id="confirmOkBtn" class="flex-1 py-2 rounded-xl bg-[#ec4899] hover:bg-[#db2777] text-white font-bold text-xs cursor-pointer shadow-xs">Ya, Lanjut</button>
       </div>
     </div>
   </div>

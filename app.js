@@ -411,11 +411,11 @@
 
       const isIncome = tx.type === 'income';
       const badgeIcon = isIncome
-        ? '<span class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-down"></i></span>'
-        : '<span class="w-7 h-7 rounded-lg bg-pink-100 dark:bg-pink-950/70 text-pink-500 dark:text-pink-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-up"></i></span>';
+        ? '<span class="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-950/70 text-[#0284c7] dark:text-sky-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-down"></i></span>'
+        : '<span class="w-7 h-7 rounded-lg bg-pink-100 dark:bg-pink-950/70 text-[#ec4899] dark:text-pink-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-up"></i></span>';
 
       const amountText = (isIncome ? '+ ' : '- ') + formatRupiah(tx.amount);
-      const amountClass = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-pink-500 dark:text-pink-400';
+      const amountClass = isIncome ? 'text-[#0284c7] dark:text-sky-400' : 'text-[#ec4899] dark:text-pink-400';
 
       const dateFormatted = tx.date
         ? new Date(tx.date + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
@@ -508,10 +508,10 @@
           datasets: [{
             data: [inc, exp],
             backgroundColor: [
-              'rgba(52, 211, 153, 0.8)',
-              'rgba(244, 114, 182, 0.8)'
+              'rgba(56, 189, 248, 0.85)',
+              'rgba(244, 114, 182, 0.85)'
             ],
-            borderColor: ['#10b981', '#ec4899'],
+            borderColor: ['#0ea5e9', '#ec4899'],
             borderWidth: 1.5,
             borderRadius: 8
           }]
@@ -562,7 +562,7 @@
         return;
       }
 
-      const cutePalette = ['#f472b6', '#38bdf8', '#fbbf24', '#a78bfa', '#34d399', '#f87171', '#fb923c'];
+      const cutePalette = ['#f472b6', '#38bdf8', '#c084fc', '#fbcfe8', '#bae6fd', '#fb7185', '#60a5fa'];
 
       financeChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -897,14 +897,14 @@
     // Chart Tabs
     chartTabSummary.addEventListener('click', () => {
       activeChartTab = 'summary';
-      chartTabSummary.className = 'px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-pink-500 font-bold cursor-pointer';
+      chartTabSummary.className = 'px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-[#0284c7] dark:text-sky-300 font-bold cursor-pointer';
       chartTabCategory.className = 'px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 font-medium cursor-pointer';
       updateChart();
     });
 
     chartTabCategory.addEventListener('click', () => {
       activeChartTab = 'category';
-      chartTabCategory.className = 'px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-pink-500 font-bold cursor-pointer';
+      chartTabCategory.className = 'px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-[#ec4899] dark:text-pink-300 font-bold cursor-pointer';
       chartTabSummary.className = 'px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 font-medium cursor-pointer';
       updateChart();
     });
