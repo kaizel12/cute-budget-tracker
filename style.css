@@ -6,8 +6,17 @@
   50% { transform: rotate(3deg); }
 }
 
+@keyframes bounceSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
 .animate-wiggle {
   animation: wiggle 3.5s ease-in-out infinite;
+}
+
+.animate-bounce-soft {
+  animation: bounceSoft 2s ease-in-out infinite;
 }
 
 /* Tab button styling: Solid, Clear, Distinct */

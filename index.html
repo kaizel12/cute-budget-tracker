@@ -32,6 +32,13 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff6b95">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="font-quicksand bg-[#fff7fa] dark:bg-[#0c111d] min-h-screen text-slate-800 dark:text-slate-100 antialiased selection:bg-pink-300 selection:text-pink-900 transition-colors duration-200">
@@ -57,6 +64,10 @@
 
       <!-- Quick Action Buttons (Kontras Jelas) -->
       <div class="flex items-center gap-2">
+        <button id="btnInstallApp" title="Pasang CuteCuan ke Layar HP" class="hidden items-center gap-1.5 px-3 py-2 rounded-xl bg-[#ffe4ec] dark:bg-pink-950 border-2 border-pink-300 dark:border-pink-800 text-[#e11d48] dark:text-pink-300 hover:bg-pink-200 text-xs font-extrabold transition-all cursor-pointer shadow-xs">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <span class="hidden sm:inline">Install HP</span>
+        </button>
         <button id="btnThemeToggle" title="Ganti Mode Malam/Terang" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border-2 border-pink-200 dark:border-slate-700 text-slate-700 dark:text-amber-300 hover:border-[#ff6b95] hover:text-[#ff6b95] flex items-center justify-center transition-all cursor-pointer text-sm shadow-xs font-bold">
           <span id="themeIcon">🌙</span>
         </button>
@@ -101,9 +112,29 @@
           Rp 0
         </div>
 
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-5 font-semibold">
+        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 font-semibold">
           ✨ Setiap uang masuk (<span class="text-[#0284c7] font-bold">Pemasukan</span>) menambah tabungan, dan <span class="text-[#e11d48] font-bold">Pengeluaran</span> langsung memotong saldo tabunganmu.
         </p>
+
+        <!-- MASKOT INTERAKTIF: TEMAN MENABUNG (Animasi & Punya Emosi) -->
+        <div id="mascotBox" class="mb-4 p-3.5 bg-[#fff0f5] dark:bg-slate-900/90 rounded-2xl border-2 border-[#ffccd9] dark:border-pink-900/70 flex items-center gap-3 cursor-pointer select-none transition-all hover:border-[#ff6b95] active:scale-[0.99] group shadow-xs" title="Klik aku untuk bicara! 💕">
+          <div id="mascotAvatar" class="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 border-2 border-pink-200 dark:border-slate-700 flex items-center justify-center text-3xl shadow-xs group-hover:scale-110 transition-transform animate-bounce-soft shrink-0">
+            🐱
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 mb-0.5">
+              <span id="mascotName" class="text-[11px] font-black text-[#e11d48] dark:text-pink-400 uppercase tracking-wider flex items-center gap-1">
+                <span>Mochi Si Kucing Tabungan</span>
+              </span>
+              <span class="text-[9px] px-2 py-0.5 rounded-full bg-pink-100 dark:bg-pink-950 text-[#e11d48] dark:text-pink-300 font-extrabold border border-pink-200 dark:border-pink-800 shrink-0">
+                🐾 Sentuh Aku
+              </span>
+            </div>
+            <p id="mascotSpeech" class="text-xs font-bold text-slate-700 dark:text-slate-200 leading-snug line-clamp-2">
+              "Semangat ya! Setiap uang yang kamu tabung bikin impianmu makin dekat~ ✨"
+            </p>
+          </div>
+        </div>
 
         <!-- DUA KOTAK WARNA TERPISAH (Color Blocking: Biru Tegas & Pink Tegas) -->
         <div class="grid grid-cols-2 gap-3.5 pt-4 border-t-2 border-pink-100 dark:border-slate-700">

@@ -131,6 +131,13 @@
   const btnExportCsv = document.getElementById('btnExportCsv');
   const btnReset = document.getElementById('btnReset');
   const toastContainer = document.getElementById('toastContainer');
+  const btnInstallApp = document.getElementById('btnInstallApp');
+
+  // Mascot Elements
+  const mascotBox = document.getElementById('mascotBox');
+  const mascotAvatar = document.getElementById('mascotAvatar');
+  const mascotSpeech = document.getElementById('mascotSpeech');
+  const mascotName = document.getElementById('mascotName');
 
   // --- Utility Helpers ---
   function escapeHtml(str) {
@@ -283,6 +290,77 @@
     return { income, expense, currentSavings };
   }
 
+  // --- Estimasi Kecepatan Tabungan per Hari ---
+  function calculateDailySavingsRate() {
+    if (!transactions || transactions.length === 0) return 20000;
+    
+    let totalInc = 0;
+    const timestamps = [];
+    transactions.forEach(t => {
+      if (t.type === 'income') totalInc += (Number(t.amount) || 0);
+      if (t.date) {
+        const time = new Date(t.date).getTime();
+        if (!isNaN(time)) timestamps.push(time);
+      }
+    });
+
+    if (totalInc <= 0) return 20000;
+
+    if (timestamps.length < 2) {
+      return Math.max(10000, Math.round(totalInc / 7));
+    }
+
+    const minTime = Math.min(...timestamps);
+    const maxTime = Math.max(...timestamps);
+    const daySpan = Math.max(1, Math.round((maxTime - minTime) / (1000 * 60 * 60 * 24)) + 1);
+    const dailyAvg = Math.round(totalInc / daySpan);
+
+    return Math.max(10000, dailyAvg);
+  }
+
+  // --- Maskot Interaktif Quotes & Emosi ---
+  const MASCOT_QUOTES = {
+    happy: [
+      "Semangat ya! Setiap rupiah yang kamu sisihkan bikin impianmu makin dekat~ ✨",
+      "Keren banget! Tabunganmu sehat, pertahankan gaya hidup hematmu ya! 🌸",
+      "Sedikit demi sedikit, lama-lama celengan kita jadi bukit berlian! 💎",
+      "Aku bangga banget kamu rajin mencatat uang masuk & keluar! 🐾",
+      "Nabung itu keren, jajan secukupnya biar masa depan cerah ceria! 🧋"
+    ],
+    worried: [
+      "Waduh, pengeluaran lagi kencang nih. Yuk rem jajan boba & kopi dulu! 🥺",
+      "Jangan sedih ya, besok kita mulai nabung lagi pelan-pelan! 💪",
+      "Coba lirik barang impianmu di bawah, yuk kumpulin lagi uangnya! 🌸"
+    ],
+    celebrate: [
+      "WAAAH! Target impianmu sudah cukup uangnya! Waktunya checkout! 🥳🎉",
+      "YEY! Selamat ya! Usaha nabungmu terbayar tuntas! Kamu juara! 👑✨"
+    ]
+  };
+
+  let mascotQuoteIndex = 0;
+  let currentMascotMood = 'happy';
+
+  function updateMascotReaction() {
+    if (!mascotBox || !mascotAvatar || !mascotSpeech) return;
+    const { income, expense, currentSavings } = getFinancialTotals();
+    const hasReachedGoal = goals.some(g => g.targetAmount > 0 && (g.currentAmount || 0) >= g.targetAmount);
+
+    if (hasReachedGoal) {
+      currentMascotMood = 'celebrate';
+      mascotAvatar.textContent = '🥳';
+    } else if (currentSavings < 0 || (expense > income && expense > 0)) {
+      currentMascotMood = 'worried';
+      mascotAvatar.textContent = '🥺';
+    } else {
+      currentMascotMood = 'happy';
+      mascotAvatar.textContent = '🐱';
+    }
+
+    const quotes = MASCOT_QUOTES[currentMascotMood] || MASCOT_QUOTES.happy;
+    mascotSpeech.textContent = `"${quotes[mascotQuoteIndex % quotes.length]}"`;
+  }
+
   function updateSummary() {
     const { income, expense, currentSavings } = getFinancialTotals();
 
@@ -315,6 +393,7 @@
 
     const { currentSavings } = getFinancialTotals();
     let availableSavings = Math.max(0, currentSavings);
+    const dailyRate = calculateDailySavingsRate();
 
     goals.forEach((goal, idx) => {
       // Tabungan yang kamu miliki otomatis mengisi target ini
@@ -325,6 +404,17 @@
       const remaining = Math.max(0, goal.targetAmount - goal.currentAmount);
       const percentage = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) || 0;
       const isReached = goal.currentAmount >= goal.targetAmount;
+
+      if (isReached && !goal._celebrated) {
+        goal._celebrated = true;
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        }
+      }
 
       const card = document.createElement('div');
       card.className = 'p-3.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-pink-200 dark:border-slate-700 shadow-xs transition-all';
@@ -373,6 +463,25 @@
                </span>`
           }
         </div>
+
+        <!-- ESTIMASI WAKTU TERCAPAI (Target Countdown) -->
+        ${isReached ? `
+          <div class="mt-2.5 flex items-center justify-between text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check"></i> Siap Dibeli!
+            </span>
+            <span>Uang Sudah Lengkap 🛍️</span>
+          </div>
+        ` : `
+          <div class="mt-2.5 flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300 bg-sky-50 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-sky-100 dark:border-slate-700">
+            <span class="flex items-center gap-1.5 text-[#0284c7] dark:text-sky-300 font-extrabold">
+              <i class="fa-solid fa-hourglass-half text-xs"></i> Estimasi Tercapai:
+            </span>
+            <span class="font-black text-[#0369a1] dark:text-sky-200">
+              ± ${Math.ceil(remaining / dailyRate)} Hari Lagi <span class="font-normal text-[10px] text-slate-400 dark:text-slate-500">(nabung ${formatRupiah(dailyRate)}/hari)</span>
+            </span>
+          </div>
+        `}
       `;
       goalsContainer.appendChild(card);
     });
@@ -631,6 +740,7 @@
     renderTransactions();
     renderGoals();
     updateChart();
+    updateMascotReaction();
   }
 
   // --- Modal Helpers ---
@@ -1024,6 +1134,71 @@
       reader.readAsText(file);
       importFileInput.value = '';
     });
+
+    // Mascot Click Interaction
+    if (mascotBox) {
+      mascotBox.addEventListener('click', () => {
+        mascotQuoteIndex++;
+        updateMascotReaction();
+
+        if (mascotAvatar) {
+          mascotAvatar.classList.remove('animate-bounce-soft');
+          mascotAvatar.style.transform = 'scale(1.3) rotate(12deg)';
+          setTimeout(() => {
+            mascotAvatar.style.transform = '';
+            mascotAvatar.classList.add('animate-bounce-soft');
+          }, 300);
+        }
+
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 15,
+            spread: 40,
+            origin: { y: 0.3 }
+          });
+        }
+      });
+    }
+
+    // PWA Service Worker & Install Prompt
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (btnInstallApp) {
+        btnInstallApp.classList.remove('hidden');
+        btnInstallApp.classList.add('flex');
+      }
+    });
+
+    if (btnInstallApp) {
+      // Selalu tampilkan tombol install di header agar user tahu bisa dipasang ke HP
+      btnInstallApp.classList.remove('hidden');
+      btnInstallApp.classList.add('flex');
+
+      btnInstallApp.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            showToast('CuteCuan berhasil dipasang ke HP! 🌸', 'success');
+          }
+          deferredPrompt = null;
+        } else {
+          showConfirm(
+            '📱 Pasang CuteCuan ke HP',
+            'Kamu bisa pasang CuteCuan langsung ke layar utama HP:\n\n• Android Chrome: Klik Titik Tiga (⋮) di atas > Tambahkan ke Layar Utama\n• iPhone Safari: Klik tombol Share (⬆️) di bawah > Add to Home Screen',
+            () => {}
+          );
+        }
+      });
+    }
 
     // Reset All Data
     btnReset.addEventListener('click', () => {
