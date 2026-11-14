@@ -1,9 +1,9 @@
-// Server sederhana bawaan Node.js (tanpa perlu install package apapun!)
+// Server lokal sederhana bawaan Node.js dengan deteksi port otomatis
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -17,7 +17,6 @@ const MIME_TYPES = {
 
 const server = http.createServer((req, res) => {
   let reqPath = req.url === '/' ? '/index.html' : req.url;
-  // Remove query string if any
   reqPath = reqPath.split('?')[0];
 
   const filePath = path.join(__dirname, reqPath);
@@ -40,8 +39,21 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log('\n🌸✨ CuteCuan Web Server Siap! ✨🌸');
-  console.log(`\n👉 Buka di browser: http://localhost:${PORT}`);
-  console.log('Tekan Ctrl + C di terminal untuk menghentikan server.\n');
-});
+function startServer(port) {
+  server.listen(port, () => {
+    console.log('\n🌸✨ CuteCuan Web Server Siap! ✨🌸');
+    console.log(`\n👉 Buka di browser: http://localhost:${port}`);
+    console.log('Tekan Ctrl + C di terminal untuk menghentikan server.\n');
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`Port ${port} sedang dipakai, mencoba port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+}
+
+startServer(DEFAULT_PORT);

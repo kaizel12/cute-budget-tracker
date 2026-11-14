@@ -1,42 +1,36 @@
-// CuteCuan v2.0 - Clean, Feature-Rich & Vercel Ready
+// CuteCuan v3 - Logika Tabungan Jelas & Tampilan Bersih
 
 (function() {
   'use strict';
 
-  // --- Constants & Predefined Categories ---
+  // --- Kategori Transaksi ---
   const CATEGORIES = {
+    income: [
+      { id: 'salary', label: '💵 Gaji / Pendapatan' },
+      { id: 'allowance', label: '🧧 Uang Saku / Kiriman' },
+      { id: 'freelance', label: '📈 Hasil Jualan / Freelance' },
+      { id: 'gift', label: '🎁 Hadiah / Bonus' },
+      { id: 'other_income', label: '🪙 Pemasukan Lainnya' }
+    ],
     expense: [
       { id: 'food', label: '🍰 Makanan & Jajan' },
-      { id: 'shopping', label: '🛍️ Belanja & Shopping' },
+      { id: 'shopping', label: '🛍️ Belanja & Kebutuhan' },
       { id: 'transport', label: '🛵 Transport & Bensin' },
-      { id: 'entertainment', label: '🎮 Hiburan & Liburan' },
-      { id: 'beauty', label: '💄 Skincare & Cantik' },
-      { id: 'education', label: '📚 Buku & Belajar' },
       { id: 'bills', label: '🏠 Tagihan & Pulsa' },
-      { id: 'others', label: '🫧 Pengeluaran Lain' }
-    ],
-    income: [
-      { id: 'salary', label: '💵 Gaji / Penghasilan' },
-      { id: 'allowance', label: '🧧 Uang Saku / Kiriman' },
-      { id: 'freelance', label: '📈 Freelance & Usaha' },
-      { id: 'gift', label: '🎁 Hadiah & Bonus' },
-      { id: 'income_others', label: '🪙 Pemasukan Lain' }
-    ],
-    savings: [
-      { id: 'piggy', label: '🐷 Masuk Celengan' },
-      { id: 'emergency', label: '🛡️ Dana Darurat' },
-      { id: 'investment', label: '🌟 Investasi Masa Depan' },
-      { id: 'dream', label: '🎯 Target Impian' }
+      { id: 'entertainment', label: '🎮 Hiburan & Main' },
+      { id: 'beauty', label: '💄 Skincare & Cantik' },
+      { id: 'other_expense', label: '🫧 Pengeluaran Lainnya' }
     ]
   };
 
   const todayISO = new Date().toISOString().split('T')[0];
 
+  // Data demo bawaan awal yang ramah & mencerminkan tabungan
   const DEFAULT_TRANSACTIONS = [
     {
       id: 'tx-1',
       type: 'income',
-      amount: 1500000,
+      amount: 2500000,
       category: 'allowance',
       categoryLabel: '🧧 Uang Saku / Kiriman',
       notes: 'Uang bulanan tersayang 🥰',
@@ -45,23 +39,13 @@
     },
     {
       id: 'tx-2',
-      type: 'savings',
-      amount: 300000,
-      category: 'piggy',
-      categoryLabel: '🐷 Masuk Celengan',
-      notes: 'Sisihkan tabungan di awal bulan ✨',
-      date: todayISO,
-      createdAt: Date.now() - 3600000 * 12
-    },
-    {
-      id: 'tx-3',
       type: 'expense',
       amount: 45000,
       category: 'food',
       categoryLabel: '🍰 Makanan & Jajan',
-      notes: 'Matcha latte + cheesecake manis 🍰',
+      notes: 'Beli kopi & cheesecake 🍰',
       date: todayISO,
-      createdAt: Date.now() - 3600000 * 4
+      createdAt: Date.now() - 3600000 * 5
     }
   ];
 
@@ -69,17 +53,9 @@
     {
       id: 'goal-1',
       title: 'Beli Sepatu Lucu 👟',
-      emoji: '🎁',
+      emoji: '👟',
       targetAmount: 500000,
-      currentAmount: 250000,
-      createdAt: Date.now()
-    },
-    {
-      id: 'goal-2',
-      title: 'Liburan ke Pantai 🏖️',
-      emoji: '✈️',
-      targetAmount: 1200000,
-      currentAmount: 450000,
+      currentAmount: 200000,
       createdAt: Date.now()
     }
   ];
@@ -87,8 +63,6 @@
   // --- State ---
   let transactions = [];
   let goals = [];
-  let monthlyBudgetLimit = 1000000;
-  let selectedMonth = 'all'; // 'all' or 'YYYY-MM'
   let currentFilter = 'all';
   let searchQuery = '';
   let activeChartTab = 'summary';
@@ -97,25 +71,13 @@
 
   // --- DOM Elements ---
   const elCurrentDate = document.getElementById('currentDate');
-  const elWalletBalance = document.getElementById('walletBalance');
+  const elTotalSavings = document.getElementById('totalSavings');
   const elTotalIncome = document.getElementById('totalIncome');
   const elTotalExpense = document.getElementById('totalExpense');
-  const elTotalSavings = document.getElementById('totalSavings');
-  const elSavingsRateBadge = document.getElementById('savingsRateBadge');
+  const savingsStatusText = document.getElementById('savingsStatusText');
 
-  const selectMonthFilter = document.getElementById('monthFilter');
   const btnThemeToggle = document.getElementById('btnThemeToggle');
   const themeIcon = document.getElementById('themeIcon');
-
-  const budgetStatusBadge = document.getElementById('budgetStatusBadge');
-  const budgetSubtitle = document.getElementById('budgetSubtitle');
-  const budgetProgressBar = document.getElementById('budgetProgressBar');
-  const btnOpenBudgetModal = document.getElementById('btnOpenBudgetModal');
-  const budgetModal = document.getElementById('budgetModal');
-  const btnCloseBudgetModal = document.getElementById('btnCloseBudgetModal');
-  const btnCancelBudget = document.getElementById('btnCancelBudget');
-  const formBudget = document.getElementById('budgetForm');
-  const inputBudgetLimit = document.getElementById('budgetLimitInput');
 
   const formTx = document.getElementById('transactionForm');
   const inputTxType = document.getElementById('txType');
@@ -123,9 +85,8 @@
   const selectTxCategory = document.getElementById('txCategory');
   const inputTxNotes = document.getElementById('txNotes');
   const inputTxDate = document.getElementById('txDate');
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const chipBtns = document.querySelectorAll('.chip-btn[data-add]');
-  const btnClearAmount = document.getElementById('btnClearAmount');
+  const tabIncome = document.getElementById('tabIncome');
+  const tabExpense = document.getElementById('tabExpense');
 
   const goalsContainer = document.getElementById('goalsContainer');
   const btnOpenGoalModal = document.getElementById('btnOpenGoalModal');
@@ -143,12 +104,8 @@
   const btnCancelDeposit = document.getElementById('btnCancelDeposit');
   const formDeposit = document.getElementById('depositForm');
   const inputDepositGoalId = document.getElementById('depositGoalId');
-  const inputDepositAction = document.getElementById('depositAction');
   const inputDepositAmount = document.getElementById('depositAmount');
   const textDepositGoalTitle = document.getElementById('depositGoalTitle');
-  const modeDepositBtn = document.getElementById('modeDepositBtn');
-  const modeWithdrawBtn = document.getElementById('modeWithdrawBtn');
-  const depositSubmitBtn = document.getElementById('depositSubmitBtn');
 
   const editTxModal = document.getElementById('editTxModal');
   const btnCloseEditTxModal = document.getElementById('btnCloseEditTxModal');
@@ -183,7 +140,7 @@
   const btnReset = document.getElementById('btnReset');
   const toastContainer = document.getElementById('toastContainer');
 
-  // --- Safe Escaping & Utility Helpers ---
+  // --- Utility Helpers ---
   function escapeHtml(str) {
     if (!str) return '';
     return String(str)
@@ -214,37 +171,34 @@
   function triggerCuteConfetti() {
     if (typeof confetti === 'function') {
       confetti({
-        particleCount: 55,
-        spread: 65,
+        particleCount: 50,
+        spread: 60,
         origin: { y: 0.7 },
-        colors: ['#f472b6', '#38bdf8', '#fbcfe8', '#bae6fd', '#fcd34d']
+        colors: ['#f472b6', '#38bdf8', '#fbcfe8', '#bae6fd']
       });
     }
   }
 
-  // --- Cute Toast Notifications ---
   function showToast(message, variant = 'success') {
     const toast = document.createElement('div');
     const styles = {
-      success: 'bg-white dark:bg-slate-800 border-pink-200 dark:border-pink-800 text-slate-700 dark:text-slate-100',
-      info: 'bg-white dark:bg-slate-800 border-sky-200 dark:border-sky-800 text-slate-700 dark:text-slate-100',
-      error: 'bg-rose-50 dark:bg-rose-950 border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-200'
+      success: 'bg-white dark:bg-slate-800 border-pink-200 dark:border-pink-900 text-slate-700 dark:text-slate-100',
+      info: 'bg-white dark:bg-slate-800 border-sky-200 dark:border-sky-900 text-slate-700 dark:text-slate-100',
+      error: 'bg-rose-50 dark:bg-rose-950 border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-200'
     };
-    const icons = { success: '🌸', info: '✨', error: '🥺' };
+    const icon = variant === 'error' ? '🥺' : (variant === 'info' ? '✨' : '🌸');
 
-    toast.className = `pointer-events-auto p-3.5 rounded-2xl shadow-lg border ${styles[variant] || styles.success} flex items-center gap-2.5 text-xs font-bold toast-enter`;
-    toast.innerHTML = `<span class="text-base">${icons[variant] || '🌸'}</span><span>${escapeHtml(message)}</span>`;
+    toast.className = `pointer-events-auto p-3 rounded-2xl shadow-md border ${styles[variant] || styles.success} flex items-center gap-2 text-xs font-bold toast-enter`;
+    toast.innerHTML = `<span class="text-sm">${icon}</span><span>${escapeHtml(message)}</span>`;
 
     toastContainer.appendChild(toast);
-
     setTimeout(() => {
       toast.classList.remove('toast-enter');
       toast.classList.add('toast-exit');
-      setTimeout(() => toast.remove(), 220);
-    }, 2800);
+      setTimeout(() => toast.remove(), 200);
+    }, 2400);
   }
 
-  // --- Custom Cute Confirmation Modal ---
   function showConfirm(title, message, onConfirm) {
     confirmTitle.textContent = title;
     confirmMessage.textContent = message;
@@ -259,7 +213,7 @@
     pendingConfirmAction = null;
   }
 
-  // --- Theme Mode (Dark/Light) Management ---
+  // --- Theme Mode ---
   function initTheme() {
     const savedTheme = localStorage.getItem('cutecuan_theme');
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -286,17 +240,12 @@
     try {
       const storedTx = localStorage.getItem('cutecuan_transactions');
       const storedGoals = localStorage.getItem('cutecuan_goals');
-      const storedBudget = localStorage.getItem('cutecuan_budget_limit');
-
       transactions = storedTx ? JSON.parse(storedTx) : DEFAULT_TRANSACTIONS;
       goals = storedGoals ? JSON.parse(storedGoals) : DEFAULT_GOALS;
-      monthlyBudgetLimit = storedBudget ? parseInt(storedBudget, 10) : 1000000;
-      if (isNaN(monthlyBudgetLimit) || monthlyBudgetLimit <= 0) monthlyBudgetLimit = 1000000;
     } catch (e) {
-      console.error('Error loading data from localStorage', e);
+      console.error('Error loading data', e);
       transactions = DEFAULT_TRANSACTIONS;
       goals = DEFAULT_GOALS;
-      monthlyBudgetLimit = 1000000;
     }
   }
 
@@ -304,133 +253,65 @@
     try {
       localStorage.setItem('cutecuan_transactions', JSON.stringify(transactions));
       localStorage.setItem('cutecuan_goals', JSON.stringify(goals));
-      localStorage.setItem('cutecuan_budget_limit', String(monthlyBudgetLimit));
     } catch (e) {
-      console.error('Error saving data to localStorage', e);
+      console.error('Error saving data', e);
     }
   }
 
-  // --- Month Period Filter Helpers ---
-  function getPeriodTransactions() {
-    if (selectedMonth === 'all') return transactions;
-    return transactions.filter(t => (t.date || '').startsWith(selectedMonth));
-  }
-
-  function populateMonthFilter() {
-    const monthsSet = new Set();
-    monthsSet.add(todayISO.slice(0, 7)); // Always include current month
-    transactions.forEach(t => {
-      if (t.date && t.date.length >= 7) {
-        monthsSet.add(t.date.slice(0, 7));
-      }
-    });
-
-    const sortedMonths = Array.from(monthsSet).sort().reverse();
-    const prevValue = selectedMonth;
-
-    selectMonthFilter.innerHTML = '<option value="all">📅 Semua Periode</option>';
-    sortedMonths.forEach(ym => {
-      const [y, m] = ym.split('-');
-      const dateObj = new Date(Number(y), Number(m) - 1, 1);
-      const label = dateObj.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-      const opt = document.createElement('option');
-      opt.value = ym;
-      opt.textContent = '🗓️ ' + label;
-      selectMonthFilter.appendChild(opt);
-    });
-
-    if (prevValue === 'all' || sortedMonths.includes(prevValue)) {
-      selectMonthFilter.value = prevValue;
-    } else {
-      selectedMonth = 'all';
-      selectMonthFilter.value = 'all';
-    }
-  }
-
-  // --- UI Update: Categories Select ---
+  // --- Kategori Dropdown ---
   function populateCategorySelect(selectEl, type, selectedValue = null) {
-    const categories = CATEGORIES[type] || CATEGORIES.expense;
+    const list = CATEGORIES[type] || CATEGORIES.income;
     selectEl.innerHTML = '';
-    categories.forEach(cat => {
-      const option = document.createElement('option');
-      option.value = cat.id;
-      option.textContent = cat.label;
-      selectEl.appendChild(option);
+    list.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = cat.label;
+      selectEl.appendChild(opt);
     });
     if (selectedValue) {
       selectEl.value = selectedValue;
     }
   }
 
-  // --- UI Update: Summary & Monthly Budget Bar ---
+  // --- CORE LOGIC: Tabungan = Pemasukan - Pengeluaran ---
   function updateSummary() {
-    const periodTxs = getPeriodTransactions();
     let income = 0;
     let expense = 0;
-    let savings = 0;
 
-    periodTxs.forEach(t => {
+    transactions.forEach(t => {
       const amt = Number(t.amount) || 0;
-      if (t.type === 'income') income += amt;
-      else if (t.type === 'expense') expense += amt;
-      else if (t.type === 'savings') savings += amt;
+      if (t.type === 'income') {
+        income += amt;
+      } else if (t.type === 'expense') {
+        expense += amt;
+      }
     });
 
-    const walletBalance = income - expense - savings;
+    // Pemasukan menambah tabungan, pengeluaran memotong tabungan
+    const currentSavings = income - expense;
 
-    elWalletBalance.textContent = formatRupiah(walletBalance);
     elTotalIncome.textContent = formatRupiah(income);
     elTotalExpense.textContent = formatRupiah(expense);
-    elTotalSavings.textContent = formatRupiah(savings);
+    elTotalSavings.textContent = formatRupiah(currentSavings);
 
-    if (walletBalance < 0) {
-      elWalletBalance.classList.remove('text-slate-800', 'dark:text-white');
-      elWalletBalance.classList.add('text-rose-500');
+    // Status pesan tabungan
+    if (currentSavings > 0) {
+      savingsStatusText.textContent = 'Tabungan Sehat 🌸';
+    } else if (currentSavings === 0) {
+      savingsStatusText.textContent = 'Yuk Mulai Menabung! ✨';
     } else {
-      elWalletBalance.classList.remove('text-rose-500');
-      elWalletBalance.classList.add('text-slate-800', 'dark:text-white');
-    }
-
-    // Savings rate badge
-    const savingsRate = income > 0 ? Math.round((savings / income) * 100) : 0;
-    if (savingsRate >= 20) {
-      elSavingsRateBadge.textContent = `Rasio tabungan: ${savingsRate}% (Keren! 🌟)`;
-    } else if (savingsRate > 0) {
-      elSavingsRateBadge.textContent = `Rasio tabungan: ${savingsRate}% ⭐`;
-    } else {
-      elSavingsRateBadge.textContent = 'Yuk sisihkan tabungan! 🐷';
-    }
-
-    // Update Rem Jajan / Budget Limit Widget
-    const budgetPct = Math.min(100, Math.round((expense / monthlyBudgetLimit) * 100)) || 0;
-    const rawPct = Math.round((expense / monthlyBudgetLimit) * 100) || 0;
-    budgetSubtitle.textContent = `Terpakai ${formatRupiah(expense)} dari batas ${formatRupiah(monthlyBudgetLimit)} (${rawPct}%)`;
-    budgetProgressBar.style.width = `${budgetPct}%`;
-
-    budgetProgressBar.className = 'h-full rounded-full transition-all duration-500';
-    if (rawPct >= 100) {
-      budgetProgressBar.classList.add('bg-gradient-to-r', 'from-rose-500', 'to-pink-600');
-      budgetStatusBadge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 font-bold';
-      budgetStatusBadge.textContent = 'Melebihi Batas! 🥺';
-    } else if (rawPct >= 75) {
-      budgetProgressBar.classList.add('bg-gradient-to-r', 'from-amber-400', 'to-orange-400');
-      budgetStatusBadge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 font-bold';
-      budgetStatusBadge.textContent = 'Hati-hati Boros ⚡';
-    } else {
-      budgetProgressBar.classList.add('bg-gradient-to-r', 'from-sky-400', 'to-pink-400');
-      budgetStatusBadge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold';
-      budgetStatusBadge.textContent = 'Aman Terkendali ✨';
+      savingsStatusText.textContent = 'Tabungan Minus 🥺';
     }
   }
 
-  // --- UI Update: Goals Section ---
+  // --- Target Celengan Impian ---
   function renderGoals() {
     goalsContainer.innerHTML = '';
     if (goals.length === 0) {
       goalsContainer.innerHTML = `
-        <div class="p-4 rounded-2xl bg-sky-50/50 dark:bg-sky-950/30 border border-sky-100 dark:border-sky-900/50 text-center">
-          <p class="text-xs text-sky-600 dark:text-sky-400 font-semibold">Belum ada target impian! 🌈</p>
-          <p class="text-[11px] text-slate-400 mt-0.5">Klik tombol "+ Target Baru" di atas untuk menambah celengan impianmu.</p>
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/60 text-center">
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Belum ada target impian.</p>
+          <p class="text-[11px] text-pink-500 font-semibold mt-0.5">Klik "+ Tambah" untuk bikin target impianmu!</p>
         </div>
       `;
       return;
@@ -441,37 +322,37 @@
       const isReached = goal.currentAmount >= goal.targetAmount;
 
       const card = document.createElement('div');
-      card.className = 'p-3.5 rounded-2xl bg-gradient-to-r from-pink-50/60 to-sky-50/60 dark:from-slate-900/80 dark:to-slate-800/80 border border-pink-100/70 dark:border-slate-700 hover:border-pink-200 dark:hover:border-pink-500/40 transition-all shadow-xs';
+      card.className = 'p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700/60 transition-all';
       card.innerHTML = `
-        <div class="flex items-center justify-between gap-2 mb-2">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <span class="text-2xl shrink-0">${escapeHtml(goal.emoji || '🎁')}</span>
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="text-xl shrink-0">${escapeHtml(goal.emoji || '🎁')}</span>
             <div class="min-w-0">
-              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 flex-wrap">
-                <span class="truncate">${escapeHtml(goal.title)}</span>
-                ${isReached ? '<span class="text-[10px] bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 font-bold px-1.5 py-0.5 rounded-md">Tercapai! 🎉</span>' : ''}
+              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate flex items-center gap-1">
+                <span>${escapeHtml(goal.title)}</span>
+                ${isReached ? '<span class="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-md">Tercapai! 🎉</span>' : ''}
               </h4>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                ${formatRupiah(goal.currentAmount)} <span class="text-slate-400 dark:text-slate-500">/ ${formatRupiah(goal.targetAmount)}</span>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">
+                ${formatRupiah(goal.currentAmount)} / ${formatRupiah(goal.targetAmount)}
               </p>
             </div>
           </div>
           <div class="flex items-center gap-1 shrink-0">
-            <button class="btn-deposit-goal p-1.5 px-2.5 bg-pink-500 hover:bg-pink-600 active:scale-95 text-white rounded-xl text-[11px] font-bold shadow-xs transition-all flex items-center gap-1 cursor-pointer" data-id="${escapeHtml(goal.id)}">
-              <i class="fa-solid fa-piggy-bank text-[10px]"></i> Kelola
+            <button class="btn-deposit-goal px-2 py-1 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-[10px] font-bold transition-all cursor-pointer" data-id="${escapeHtml(goal.id)}">
+              Sisihkan
             </button>
-            <button class="btn-delete-goal p-1.5 text-slate-300 dark:text-slate-500 hover:text-rose-400 rounded-lg text-xs transition-colors cursor-pointer" data-id="${escapeHtml(goal.id)}" title="Hapus target">
+            <button class="btn-delete-goal p-1 text-slate-300 hover:text-rose-400 rounded-lg text-xs transition-colors cursor-pointer" data-id="${escapeHtml(goal.id)}" title="Hapus target">
               <i class="fa-regular fa-trash-can"></i>
             </button>
           </div>
         </div>
 
-        <div class="w-full bg-slate-100 dark:bg-slate-700/80 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-200/50 dark:border-slate-600/50">
-          <div class="bg-gradient-to-r from-pink-400 to-sky-400 dark:from-pink-500 dark:to-sky-500 h-full rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+          <div class="bg-gradient-to-r from-pink-400 to-sky-400 h-full rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
         </div>
-        <div class="flex justify-between items-center text-[10px] font-bold text-slate-400 mt-1">
+        <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1">
           <span>Progres</span>
-          <span class="text-pink-500 dark:text-pink-400">${percentage}%</span>
+          <span class="text-pink-500 font-semibold">${percentage}%</span>
         </div>
       `;
       goalsContainer.appendChild(card);
@@ -484,7 +365,7 @@
     goalsContainer.querySelectorAll('.btn-delete-goal').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-id');
-        showConfirm('Hapus Target?', 'Yakin ingin menghapus target celengan impian ini? 🌸', () => {
+        showConfirm('Hapus Target?', 'Hapus target impian ini? 🌸', () => {
           goals = goals.filter(g => g.id !== id);
           saveData();
           renderGoals();
@@ -494,9 +375,9 @@
     });
   }
 
-  // --- UI Update: Transactions List ---
+  // --- Riwayat Transaksi Bersih ---
   function renderTransactions() {
-    let filtered = getPeriodTransactions().filter(t => {
+    let filtered = transactions.filter(t => {
       if (currentFilter !== 'all' && t.type !== currentFilter) return false;
       if (searchQuery.trim() !== '') {
         const q = searchQuery.toLowerCase();
@@ -508,8 +389,8 @@
     });
 
     filtered.sort((a, b) => {
-      const dateCompare = (b.date || '').localeCompare(a.date || '');
-      if (dateCompare !== 0) return dateCompare;
+      const d = (b.date || '').localeCompare(a.date || '');
+      if (d !== 0) return d;
       return (b.createdAt || 0) - (a.createdAt || 0);
     });
 
@@ -526,52 +407,42 @@
 
     filtered.forEach(tx => {
       const item = document.createElement('div');
-      item.className = 'p-3 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-100 dark:border-slate-700/70 hover:border-pink-200 dark:hover:border-pink-500/40 shadow-xs hover:shadow-sm transition-all flex items-center justify-between gap-3 group';
+      item.className = 'p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-2.5 group';
 
-      let typeBadge = '';
-      let amountClass = '';
-      let prefix = '';
+      const isIncome = tx.type === 'income';
+      const badgeIcon = isIncome
+        ? '<span class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-down"></i></span>'
+        : '<span class="w-7 h-7 rounded-lg bg-pink-100 dark:bg-pink-950/70 text-pink-500 dark:text-pink-300 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-up"></i></span>';
 
-      if (tx.type === 'income') {
-        typeBadge = '<span class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-500 dark:text-emerald-400 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-arrow-down"></i></span>';
-        amountClass = 'text-emerald-600 dark:text-emerald-400';
-        prefix = '+';
-      } else if (tx.type === 'expense') {
-        typeBadge = '<span class="w-8 h-8 rounded-xl bg-pink-50 dark:bg-pink-950/60 text-pink-500 dark:text-pink-400 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-arrow-up"></i></span>';
-        amountClass = 'text-pink-500 dark:text-pink-400';
-        prefix = '-';
-      } else {
-        typeBadge = '<span class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-500 dark:text-sky-400 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-piggy-bank"></i></span>';
-        amountClass = 'text-sky-500 dark:text-sky-400';
-        prefix = '🐖 ';
-      }
+      const amountText = (isIncome ? '+ ' : '- ') + formatRupiah(tx.amount);
+      const amountClass = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-pink-500 dark:text-pink-400';
 
       const dateFormatted = tx.date
-        ? new Date(tx.date + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' })
+        ? new Date(tx.date + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
         : 'Hari ini';
 
       item.innerHTML = `
-        <div class="flex items-center gap-3 min-w-0">
-          ${typeBadge}
+        <div class="flex items-center gap-2.5 min-w-0">
+          ${badgeIcon}
           <div class="min-w-0">
-            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight truncate">${escapeHtml(tx.notes || tx.categoryLabel)}</h4>
-            <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
-              <span class="text-[11px] font-semibold text-slate-400">${escapeHtml(tx.categoryLabel || 'Lainnya')}</span>
-              <span class="text-[10px] text-slate-300 dark:text-slate-600">•</span>
-              <span class="text-[10px] font-medium text-slate-400">${escapeHtml(dateFormatted)}</span>
+            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">${escapeHtml(tx.notes || tx.categoryLabel)}</h4>
+            <div class="flex items-center gap-1.5 text-[10px] text-slate-400">
+              <span class="truncate">${escapeHtml(tx.categoryLabel || 'Lainnya')}</span>
+              <span>•</span>
+              <span class="shrink-0">${escapeHtml(dateFormatted)}</span>
             </div>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 shrink-0">
-          <span class="text-xs sm:text-sm font-bold ${amountClass} mr-1">
-            ${prefix}${formatRupiah(tx.amount)}
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="text-xs font-bold ${amountClass}">
+            ${amountText}
           </span>
-          <button class="btn-edit-tx text-slate-300 dark:text-slate-500 hover:text-sky-500 p-1.5 rounded-lg opacity-70 sm:opacity-0 group-hover:opacity-100 transition-all cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Edit catatan">
-            <i class="fa-regular fa-pen-to-square text-xs"></i>
+          <button class="btn-edit-tx text-slate-300 hover:text-sky-500 p-1 rounded-md transition-colors cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Ubah">
+            <i class="fa-regular fa-pen-to-square text-[11px]"></i>
           </button>
-          <button class="btn-delete-tx text-slate-300 dark:text-slate-500 hover:text-rose-400 p-1.5 rounded-lg opacity-70 sm:opacity-0 group-hover:opacity-100 transition-all cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Hapus catatan">
-            <i class="fa-regular fa-trash-can text-xs"></i>
+          <button class="btn-delete-tx text-slate-300 hover:text-rose-400 p-1 rounded-md transition-colors cursor-pointer" data-id="${escapeHtml(tx.id)}" title="Hapus">
+            <i class="fa-regular fa-trash-can text-[11px]"></i>
           </button>
         </div>
       `;
@@ -586,24 +457,21 @@
     transactionsList.querySelectorAll('.btn-delete-tx').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-id');
-        showConfirm('Hapus Catatan?', 'Catatan transaksi ini akan dihapus permanen 💕', () => {
+        showConfirm('Hapus Catatan?', 'Hapus catatan transaksi ini? 💕', () => {
           transactions = transactions.filter(t => t.id !== id);
           saveData();
-          populateMonthFilter();
           refreshAllUI();
-          showToast('Catatan berhasil dihapus', 'info');
+          showToast('Catatan dihapus', 'info');
         });
       });
     });
   }
 
-  // --- UI Update: Chart.js Visuals ---
+  // --- Visual Grafik Sederhana ---
   function updateChart() {
     if (typeof Chart === 'undefined') return;
 
-    const periodTxs = getPeriodTransactions();
-
-    if (periodTxs.length === 0) {
+    if (transactions.length === 0) {
       if (financeChartInstance) {
         financeChartInstance.destroy();
         financeChartInstance = null;
@@ -624,31 +492,28 @@
     const ctx = chartCanvas.getContext('2d');
     const textColor = isDark ? '#cbd5e1' : '#64748b';
     const gridColor = isDark ? 'rgba(51, 65, 85, 0.4)' : 'rgba(241, 245, 249, 0.8)';
-    const legendColor = isDark ? '#f1f5f9' : '#334155';
 
     if (activeChartTab === 'summary') {
-      let inc = 0, exp = 0, sav = 0;
-      periodTxs.forEach(t => {
+      let inc = 0, exp = 0;
+      transactions.forEach(t => {
         const amt = Number(t.amount) || 0;
         if (t.type === 'income') inc += amt;
         else if (t.type === 'expense') exp += amt;
-        else if (t.type === 'savings') sav += amt;
       });
 
       financeChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['Pemasukan 🌸', 'Pengeluaran 🛍️', 'Tabungan 🐷'],
+          labels: ['Pemasukan (+)', 'Pengeluaran (-)'],
           datasets: [{
-            data: [inc, exp, sav],
+            data: [inc, exp],
             backgroundColor: [
-              'rgba(52, 211, 153, 0.75)',
-              'rgba(244, 114, 182, 0.75)',
-              'rgba(56, 189, 248, 0.75)'
+              'rgba(52, 211, 153, 0.8)',
+              'rgba(244, 114, 182, 0.8)'
             ],
-            borderColor: ['#10b981', '#ec4899', '#0284c7'],
-            borderWidth: 2,
-            borderRadius: 12
+            borderColor: ['#10b981', '#ec4899'],
+            borderWidth: 1.5,
+            borderRadius: 8
           }]
         },
         options: {
@@ -668,11 +533,7 @@
               ticks: {
                 color: textColor,
                 font: { family: 'Quicksand', size: 10 },
-                callback: value => {
-                  if (value >= 1000000) return (value / 1000000) + 'jt';
-                  if (value >= 1000) return (value / 1000) + 'rb';
-                  return value;
-                }
+                callback: value => (value >= 1000000 ? (value / 1000000) + 'jt' : (value >= 1000 ? (value / 1000) + 'rb' : value))
               },
               grid: { color: gridColor }
             },
@@ -684,7 +545,7 @@
         }
       });
     } else {
-      const expenses = periodTxs.filter(t => t.type === 'expense');
+      const expenses = transactions.filter(t => t.type === 'expense');
       const categoryMap = {};
 
       expenses.forEach(t => {
@@ -701,10 +562,7 @@
         return;
       }
 
-      const cutePalette = [
-        '#f472b6', '#38bdf8', '#fbbf24', '#a78bfa',
-        '#34d399', '#f87171', '#fb923c', '#e879f9'
-      ];
+      const cutePalette = ['#f472b6', '#38bdf8', '#fbbf24', '#a78bfa', '#34d399', '#f87171', '#fb923c'];
 
       financeChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -714,8 +572,7 @@
             data: data,
             backgroundColor: cutePalette.slice(0, labels.length),
             borderWidth: 2,
-            borderColor: isDark ? '#1e293b' : '#ffffff',
-            hoverOffset: 6
+            borderColor: isDark ? '#1e293b' : '#ffffff'
           }]
         },
         options: {
@@ -725,10 +582,10 @@
             legend: {
               position: 'bottom',
               labels: {
-                color: legendColor,
+                color: textColor,
                 font: { family: 'Quicksand', size: 10, weight: '600' },
-                boxWidth: 12,
-                padding: 10
+                boxWidth: 10,
+                padding: 8
               }
             },
             tooltip: {
@@ -737,7 +594,7 @@
               }
             }
           },
-          cutout: '62%'
+          cutout: '65%'
         }
       });
     }
@@ -751,19 +608,6 @@
   }
 
   // --- Modal Helpers ---
-  function setDepositMode(action) {
-    inputDepositAction.value = action;
-    if (action === 'deposit') {
-      modeDepositBtn.className = 'py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-300 shadow-xs cursor-pointer';
-      modeWithdrawBtn.className = 'py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 cursor-pointer';
-      depositSubmitBtn.textContent = 'Masukkan 🪙';
-    } else {
-      modeWithdrawBtn.className = 'py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-rose-500 dark:text-rose-400 shadow-xs cursor-pointer';
-      modeDepositBtn.className = 'py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 cursor-pointer';
-      depositSubmitBtn.textContent = 'Tarik Dana 💸';
-    }
-  }
-
   function openDepositModal(goalId) {
     const goal = goals.find(g => g.id === goalId);
     if (!goal) return;
@@ -771,7 +615,6 @@
     inputDepositGoalId.value = goal.id;
     inputDepositAmount.value = '';
     textDepositGoalTitle.textContent = `${goal.emoji || '🎁'} ${goal.title} (Terkumpul: ${formatRupiah(goal.currentAmount)})`;
-    setDepositMode('deposit');
 
     depositModal.classList.remove('hidden');
     depositModal.classList.add('open');
@@ -819,51 +662,31 @@
     editTxModal.classList.remove('open');
   }
 
-  function openBudgetModal() {
-    inputBudgetLimit.value = monthlyBudgetLimit.toLocaleString('id-ID');
-    budgetModal.classList.remove('hidden');
-    budgetModal.classList.add('open');
-    inputBudgetLimit.focus();
-  }
-
-  function closeBudgetModal() {
-    budgetModal.classList.add('hidden');
-    budgetModal.classList.remove('open');
-  }
-
   // --- Export CSV ---
   function exportToCSV() {
-    const rows = getPeriodTransactions();
-    if (rows.length === 0) {
-      showToast('Belum ada transaksi untuk diekspor', 'error');
+    if (transactions.length === 0) {
+      showToast('Belum ada transaksi untuk diunduh', 'error');
       return;
     }
 
-    const header = ['Tanggal', 'Tipe', 'Kategori', 'Catatan', 'Nominal'];
-    const typeMap = { income: 'Pemasukan', expense: 'Pengeluaran', savings: 'Tabungan' };
-
+    const header = ['Tanggal', 'Tipe', 'Kategori', 'Keterangan', 'Nominal'];
     const csvLines = [header.join(',')];
-    rows.forEach(t => {
+    transactions.forEach(t => {
       const safeNotes = '"' + String(t.notes || '').replace(/"/g, '""') + '"';
       const safeCat = '"' + String(t.categoryLabel || '').replace(/"/g, '""') + '"';
-      csvLines.push([
-        t.date || '',
-        typeMap[t.type] || t.type,
-        safeCat,
-        safeNotes,
-        t.amount || 0
-      ].join(','));
+      const typeText = t.type === 'income' ? 'Pemasukan (+)' : 'Pengeluaran (-)';
+      csvLines.push([t.date || '', typeText, safeCat, safeNotes, t.amount || 0].join(','));
     });
 
     const csvContent = '\uFEFF' + csvLines.join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `cutecuan-laporan-${selectedMonth === 'all' ? 'semua' : selectedMonth}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cutecuan-tabungan-${todayISO}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
     URL.revokeObjectURL(url);
     showToast('Laporan CSV berhasil diunduh! 📊', 'success');
   }
@@ -888,42 +711,23 @@
     attachCurrencyMask(inputGoalTarget);
     attachCurrencyMask(inputDepositAmount);
     attachCurrencyMask(inputEditTxAmount);
-    attachCurrencyMask(inputBudgetLimit);
 
-    // Quick amount chips
-    chipBtns.forEach(chip => {
-      chip.addEventListener('click', () => {
-        const addVal = parseInt(chip.getAttribute('data-add'), 10) || 0;
-        const currentVal = parseRupiahInput(inputTxAmount.value);
-        inputTxAmount.value = (currentVal + addVal).toLocaleString('id-ID');
-      });
+    // Toggle: Pemasukan vs Pengeluaran
+    tabIncome.addEventListener('click', () => {
+      tabIncome.classList.add('active');
+      tabExpense.classList.remove('active');
+      inputTxType.value = 'income';
+      populateCategorySelect(selectTxCategory, 'income');
     });
 
-    if (btnClearAmount) {
-      btnClearAmount.addEventListener('click', () => {
-        inputTxAmount.value = '';
-        inputTxAmount.focus();
-      });
-    }
-
-    // Month filter
-    selectMonthFilter.addEventListener('change', (e) => {
-      selectedMonth = e.target.value;
-      refreshAllUI();
+    tabExpense.addEventListener('click', () => {
+      tabExpense.classList.add('active');
+      tabIncome.classList.remove('active');
+      inputTxType.value = 'expense';
+      populateCategorySelect(selectTxCategory, 'expense');
     });
 
-    // Tab Type Buttons
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const type = btn.getAttribute('data-type');
-        inputTxType.value = type;
-        populateCategorySelect(selectTxCategory, type);
-      });
-    });
-
-    // Submit: New Transaction
+    // Form Catat Transaksi Baru
     formTx.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -936,11 +740,11 @@
       const date = inputTxDate.value;
 
       if (amount <= 0) {
-        showToast('Nominal uang harus lebih dari Rp 0 ya 🌸', 'error');
+        showToast('Nominal harus lebih dari Rp 0 ya 🌸', 'error');
         return;
       }
 
-      const newTx = {
+      transactions.unshift({
         id: 'tx-' + Date.now(),
         type: type,
         amount: amount,
@@ -949,26 +753,23 @@
         notes: notes,
         date: date,
         createdAt: Date.now()
-      };
+      });
 
-      transactions.unshift(newTx);
       saveData();
-      populateMonthFilter();
       refreshAllUI();
 
-      // Smart confetti: only on income or savings!
-      if (type === 'income' || type === 'savings') {
+      if (type === 'income') {
         triggerCuteConfetti();
-        showToast(type === 'income' ? 'Yeay! Pemasukan dicatat 💵' : 'Hebat! Tabungan bertambah 🐷', 'success');
+        showToast('Tabungan bertambah! 💵✨', 'success');
       } else {
-        showToast('Pengeluaran tercatat rapi 📝', 'info');
+        showToast('Pengeluaran dicatat (memotong tabungan) 📝', 'info');
       }
 
       inputTxAmount.value = '';
       inputTxNotes.value = '';
     });
 
-    // Edit Transaction Modal Events
+    // Edit Modal Events
     btnCloseEditTxModal.addEventListener('click', closeEditTxModal);
     btnCancelEditTx.addEventListener('click', closeEditTxModal);
     formEditTx.addEventListener('submit', (e) => {
@@ -979,7 +780,7 @@
 
       const amount = parseRupiahInput(inputEditTxAmount.value);
       if (amount <= 0) {
-        showToast('Nominal tidak boleh nol ya!', 'error');
+        showToast('Nominal tidak boleh nol', 'error');
         return;
       }
 
@@ -991,28 +792,9 @@
       tx.date = inputEditTxDate.value;
 
       saveData();
-      populateMonthFilter();
       refreshAllUI();
       closeEditTxModal();
-      showToast('Catatan berhasil diperbarui ✨', 'success');
-    });
-
-    // Budget Limit Modal Events
-    btnOpenBudgetModal.addEventListener('click', openBudgetModal);
-    btnCloseBudgetModal.addEventListener('click', closeBudgetModal);
-    btnCancelBudget.addEventListener('click', closeBudgetModal);
-    formBudget.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const limit = parseRupiahInput(inputBudgetLimit.value);
-      if (limit <= 0) {
-        showToast('Batas anggaran harus lebih dari Rp 0', 'error');
-        return;
-      }
-      monthlyBudgetLimit = limit;
-      saveData();
-      updateSummary();
-      closeBudgetModal();
-      showToast('Rem jajan bulanan disimpan! 🚨', 'success');
+      showToast('Catatan diperbarui ✨', 'success');
     });
 
     // Goal Modal Events
@@ -1035,7 +817,7 @@
       const targetAmount = parseRupiahInput(inputGoalTarget.value);
 
       if (!title || targetAmount <= 0) {
-        showToast('Isi nama impian dan target nominal yang benar ya ✨', 'error');
+        showToast('Isi nama impian dan target nominal yang benar ✨', 'error');
         return;
       }
 
@@ -1052,71 +834,43 @@
       renderGoals();
       closeGoalModal();
       triggerCuteConfetti();
-      showToast('Target impian baru dibuat! 🎯', 'success');
+      showToast('Target impian dibuat! 🎯', 'success');
     });
 
-    // Deposit / Withdraw Modal Events
+    // Deposit to Goal Events
     btnCloseDepositModal.addEventListener('click', closeDepositModal);
     btnCancelDeposit.addEventListener('click', closeDepositModal);
-    modeDepositBtn.addEventListener('click', () => setDepositMode('deposit'));
-    modeWithdrawBtn.addEventListener('click', () => setDepositMode('withdraw'));
 
     formDeposit.addEventListener('submit', (e) => {
       e.preventDefault();
       const goalId = inputDepositGoalId.value;
-      const action = inputDepositAction.value;
       const amt = parseRupiahInput(inputDepositAmount.value);
 
       if (amt <= 0) {
-        showToast('Masukkan nominal yang benar ya! 🪙', 'error');
+        showToast('Masukkan nominal yang benar ya 🪙', 'error');
         return;
       }
 
       const goal = goals.find(g => g.id === goalId);
       if (!goal) return;
 
-      if (action === 'withdraw') {
-        if (amt > goal.currentAmount) {
-          showToast('Saldo celengan ini tidak cukup untuk ditarik', 'error');
-          return;
-        }
-        goal.currentAmount -= amt;
-        saveData();
-        refreshAllUI();
-        closeDepositModal();
-        showToast(`Berhasil tarik ${formatRupiah(amt)} dari celengan`, 'info');
-        return;
-      }
-
       const wasReached = goal.currentAmount >= goal.targetAmount;
       goal.currentAmount = (goal.currentAmount || 0) + amt;
       const nowReached = goal.currentAmount >= goal.targetAmount;
 
-      transactions.unshift({
-        id: 'tx-' + Date.now(),
-        type: 'savings',
-        amount: amt,
-        category: 'dream',
-        categoryLabel: '🎯 Target: ' + goal.title,
-        notes: `Nabung untuk ${goal.title} ${goal.emoji}`,
-        date: todayISO,
-        createdAt: Date.now()
-      });
-
       saveData();
-      populateMonthFilter();
-      refreshAllUI();
+      renderGoals();
       closeDepositModal();
       triggerCuteConfetti();
 
       if (!wasReached && nowReached) {
         showToast(`Selamat! Target "${goal.title}" sudah 100% tercapai! 🎉`, 'success');
       } else {
-        showToast(`Yeay! Berhasil menabung ${formatRupiah(amt)} 🐷`, 'success');
+        showToast(`Berhasil menyisihkan ${formatRupiah(amt)} untuk ${goal.title} ✨`, 'success');
       }
     });
 
-    // Custom Confirm Modal Events
+    // Confirm Modal Events
     confirmCancelBtn.addEventListener('click', closeConfirm);
     confirmOkBtn.addEventListener('click', () => {
       if (typeof pendingConfirmAction === 'function') {
@@ -1143,28 +897,27 @@
     // Chart Tabs
     chartTabSummary.addEventListener('click', () => {
       activeChartTab = 'summary';
-      chartTabSummary.className = 'px-3 py-1 rounded-lg bg-white dark:bg-slate-800 shadow-xs text-pink-600 dark:text-pink-400 font-bold cursor-pointer';
-      chartTabCategory.className = 'px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-pink-600 font-medium cursor-pointer';
+      chartTabSummary.className = 'px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-pink-500 font-bold cursor-pointer';
+      chartTabCategory.className = 'px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 font-medium cursor-pointer';
       updateChart();
     });
 
     chartTabCategory.addEventListener('click', () => {
       activeChartTab = 'category';
-      chartTabCategory.className = 'px-3 py-1 rounded-lg bg-white dark:bg-slate-800 shadow-xs text-pink-600 dark:text-pink-400 font-bold cursor-pointer';
-      chartTabSummary.className = 'px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-pink-600 font-medium cursor-pointer';
+      chartTabCategory.className = 'px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 shadow-2xs text-pink-500 font-bold cursor-pointer';
+      chartTabSummary.className = 'px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 font-medium cursor-pointer';
       updateChart();
     });
 
     // Export CSV
     btnExportCsv.addEventListener('click', exportToCSV);
 
-    // Export JSON Backup
+    // Export JSON
     btnExport.addEventListener('click', () => {
       const backupData = {
         appName: 'CuteCuan',
-        version: '2.0',
+        version: '3.0',
         exportedAt: new Date().toISOString(),
-        monthlyBudgetLimit: monthlyBudgetLimit,
         transactions: transactions,
         goals: goals
       };
@@ -1178,10 +931,10 @@
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      showToast('File cadangan JSON berhasil diunduh 💾', 'success');
+      showToast('Cadangan data berhasil diunduh 💾', 'success');
     });
 
-    // Import JSON Restore
+    // Import JSON
     btnImport.addEventListener('click', () => importFileInput.click());
     importFileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -1191,25 +944,23 @@
       reader.onload = (ev) => {
         try {
           const parsed = JSON.parse(ev.target.result);
-          if (!Array.isArray(parsed.transactions) || !Array.isArray(parsed.goals)) {
-            showToast('Format file cadangan tidak valid!', 'error');
+          if (!Array.isArray(parsed.transactions)) {
+            showToast('Format cadangan tidak sesuai', 'error');
             return;
           }
           showConfirm(
             'Pulihkan Data?',
-            `Ditemukan ${parsed.transactions.length} catatan & ${parsed.goals.length} target. Ganti data saat ini?`,
+            `Pulihkan ${parsed.transactions.length} transaksi cadangan?`,
             () => {
               transactions = parsed.transactions;
-              goals = parsed.goals;
-              if (parsed.monthlyBudgetLimit) monthlyBudgetLimit = parsed.monthlyBudgetLimit;
+              if (Array.isArray(parsed.goals)) goals = parsed.goals;
               saveData();
-              populateMonthFilter();
               refreshAllUI();
               showToast('Data berhasil dipulihkan! ✨', 'success');
             }
           );
         } catch (err) {
-          showToast('Gagal membaca file JSON!', 'error');
+          showToast('Gagal membaca file JSON', 'error');
         }
       };
       reader.readAsText(file);
@@ -1219,15 +970,14 @@
     // Reset All Data
     btnReset.addEventListener('click', () => {
       showConfirm(
-        'Bersihkan Semua Data?',
-        'Semua catatan keuangan & target celengan akan dihapus permanen! 🧹',
+        'Reset Data?',
+        'Hapus semua catatan transaksi dan target celengan? 🧹',
         () => {
           transactions = [];
           goals = [];
           saveData();
-          populateMonthFilter();
           refreshAllUI();
-          showToast('Semua data telah dibersihkan ✨', 'info');
+          showToast('Data berhasil dibersihkan ✨', 'info');
         }
       );
     });
@@ -1237,8 +987,7 @@
   function initApp() {
     initTheme();
     loadData();
-    populateMonthFilter();
-    populateCategorySelect(selectTxCategory, 'expense');
+    populateCategorySelect(selectTxCategory, 'income');
     initEvents();
     refreshAllUI();
   }
