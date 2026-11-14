@@ -1,9 +1,11 @@
-// Server lokal sederhana bawaan Node.js dengan deteksi port otomatis
+// Server lokal sederhana CuteCuan
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
+// Gunakan port 3001 (atau dari environment variable jika ada)
+const PORT = parseInt(process.env.PORT, 10) || 3001;
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -29,7 +31,7 @@ const server = http.createServer((req, res) => {
         res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
         res.end('<h1>404 Halaman Tidak Ditemukan 🌸</h1>');
       } else {
-        res.writeHead(500);
+        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
         res.end(`Server Error: ${err.code}`);
       }
     } else {
@@ -39,21 +41,12 @@ const server = http.createServer((req, res) => {
   });
 });
 
-function startServer(port) {
-  server.listen(port, () => {
-    console.log('\n🌸✨ CuteCuan Web Server Siap! ✨🌸');
-    console.log(`\n👉 Buka di browser: http://localhost:${port}`);
-    console.log('Tekan Ctrl + C di terminal untuk menghentikan server.\n');
-  });
+server.listen(PORT, () => {
+  console.log(`\n🌸✨ CuteCuan Web Server Berjalan Aktif! ✨🌸`);
+  console.log(`👉 Akses di browser: http://localhost:${PORT}/`);
+  console.log(`👉 Atau via IP: http://127.0.0.1:${PORT}/\n`);
+});
 
-  server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-      console.log(`Port ${port} sedang dipakai, mencoba port ${port + 1}...`);
-      startServer(port + 1);
-    } else {
-      console.error('Server error:', err);
-    }
-  });
-}
-
-startServer(DEFAULT_PORT);
+server.on('error', (err) => {
+  console.error('Server error:', err);
+});
