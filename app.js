@@ -97,7 +97,9 @@
   const inputGoalTitle = document.getElementById('goalTitle');
   const inputGoalEmoji = document.getElementById('goalEmoji');
   const inputGoalTarget = document.getElementById('goalTargetAmount');
+  const inputGoalInitial = document.getElementById('goalInitialAmount');
   const emojiBtns = document.querySelectorAll('.emoji-btn');
+  const presetChips = document.querySelectorAll('.preset-chip');
 
   const depositModal = document.getElementById('depositModal');
   const btnCloseDepositModal = document.getElementById('btnCloseDepositModal');
@@ -304,14 +306,14 @@
     }
   }
 
-  // --- Target Celengan Impian ---
+  // --- Target Celengan Impian (Mau Beli Apa & Sisa Berapa Lagi) ---
   function renderGoals() {
     goalsContainer.innerHTML = '';
     if (goals.length === 0) {
       goalsContainer.innerHTML = `
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/60 text-center">
+        <div class="p-3.5 rounded-2xl bg-pink-50/30 dark:bg-slate-900 border border-pink-100/70 dark:border-slate-700/60 text-center">
           <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Belum ada target impian.</p>
-          <p class="text-[11px] text-pink-500 font-semibold mt-0.5">Klik "+ Tambah" untuk bikin target impianmu!</p>
+          <p class="text-[11px] text-[#ec4899] font-semibold mt-0.5">Klik "+ Tambah" untuk mencatat barang yang mau kamu beli!</p>
         </div>
       `;
       return;
@@ -319,27 +321,29 @@
 
     goals.forEach(goal => {
       const percentage = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) || 0;
+      const remaining = Math.max(0, goal.targetAmount - goal.currentAmount);
       const isReached = goal.currentAmount >= goal.targetAmount;
 
       const card = document.createElement('div');
-      card.className = 'p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700/60 transition-all';
+      card.className = 'p-3.5 rounded-2xl bg-white dark:bg-slate-900/60 border border-pink-100/80 dark:border-slate-700/60 shadow-2xs transition-all';
       card.innerHTML = `
-        <div class="flex items-center justify-between gap-2 mb-1.5">
-          <div class="flex items-center gap-2 min-w-0">
-            <span class="text-xl shrink-0">${escapeHtml(goal.emoji || '🎁')}</span>
+        <!-- Baris Atas: Ikon, Nama Barang, Harga & Tombol Aksi -->
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="text-2xl p-1.5 rounded-xl bg-pink-50 dark:bg-slate-800 shrink-0 select-none">${escapeHtml(goal.emoji || '🎁')}</span>
             <div class="min-w-0">
-              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate flex items-center gap-1">
+              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate flex items-center gap-1.5">
                 <span>${escapeHtml(goal.title)}</span>
-                ${isReached ? '<span class="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-md">Tercapai! 🎉</span>' : ''}
+                ${isReached ? '<span class="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 font-bold px-1.5 py-0.5 rounded-md shrink-0">Tercapai! 🎉</span>' : ''}
               </h4>
-              <p class="text-[10px] text-slate-500 dark:text-slate-400">
-                ${formatRupiah(goal.currentAmount)} / ${formatRupiah(goal.targetAmount)}
+              <p class="text-[11px] text-slate-400 mt-0.5">
+                Target Harga: <span class="font-bold text-slate-700 dark:text-slate-200">${formatRupiah(goal.targetAmount)}</span>
               </p>
             </div>
           </div>
           <div class="flex items-center gap-1 shrink-0">
-            <button class="btn-deposit-goal px-2 py-1 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-[10px] font-bold transition-all cursor-pointer" data-id="${escapeHtml(goal.id)}">
-              Sisihkan
+            <button class="btn-deposit-goal px-2.5 py-1.5 bg-gradient-to-r from-[#f472b6] to-[#38bdf8] hover:opacity-95 text-white rounded-xl text-[10px] font-bold transition-all active:scale-95 cursor-pointer shadow-2xs">
+              + Sisihkan
             </button>
             <button class="btn-delete-goal p-1 text-slate-300 hover:text-rose-400 rounded-lg text-xs transition-colors cursor-pointer" data-id="${escapeHtml(goal.id)}" title="Hapus target">
               <i class="fa-regular fa-trash-can"></i>
@@ -347,12 +351,24 @@
           </div>
         </div>
 
-        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-          <div class="bg-gradient-to-r from-pink-400 to-sky-400 h-full rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
+        <!-- Progress Bar Gemas -->
+        <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden p-0.5 border border-pink-100/40 dark:border-slate-600">
+          <div class="bg-gradient-to-r from-[#f472b6] to-[#38bdf8] h-full rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
         </div>
-        <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1">
-          <span>Progres</span>
-          <span class="text-pink-500 font-semibold">${percentage}%</span>
+
+        <!-- Baris Bawah: Terkumpul & SISA BERAPA LAGI (Sangat Jelas & Memotivasi) -->
+        <div class="flex items-center justify-between text-[11px] font-semibold mt-2 pt-1 border-t border-slate-100 dark:border-slate-800 flex-wrap gap-1">
+          <span class="text-slate-500 dark:text-slate-400">
+            Terkumpul: <b class="text-[#0284c7] dark:text-sky-300">${formatRupiah(goal.currentAmount)}</b> (${percentage}%)
+          </span>
+          ${remaining > 0 
+            ? `<span class="px-2 py-0.5 rounded-lg bg-pink-50 dark:bg-pink-950/70 text-[#ec4899] dark:text-pink-300 font-bold text-[10px]">
+                Kurang <b class="font-extrabold text-[#db2777] dark:text-pink-200">${formatRupiah(remaining)}</b> lagi! ⏳
+               </span>`
+            : `<span class="px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/70 text-[#0284c7] dark:text-sky-300 font-bold text-[10px]">
+                Uang Sudah Cukup! Siap Dibeli ✨
+               </span>`
+          }
         </div>
       `;
       goalsContainer.appendChild(card);
@@ -629,6 +645,7 @@
   function openGoalModal() {
     inputGoalTitle.value = '';
     inputGoalTarget.value = '';
+    if (inputGoalInitial) inputGoalInitial.value = '';
     inputGoalEmoji.value = '🎁';
     emojiBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-emoji') === '🎁'));
 
@@ -709,6 +726,7 @@
 
     attachCurrencyMask(inputTxAmount);
     attachCurrencyMask(inputGoalTarget);
+    if (inputGoalInitial) attachCurrencyMask(inputGoalInitial);
     attachCurrencyMask(inputDepositAmount);
     attachCurrencyMask(inputEditTxAmount);
 
@@ -810,14 +828,24 @@
       });
     });
 
+    presetChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        inputGoalTitle.value = chip.getAttribute('data-name');
+        const em = chip.getAttribute('data-emoji');
+        inputGoalEmoji.value = em;
+        emojiBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-emoji') === em));
+      });
+    });
+
     formGoal.addEventListener('submit', (e) => {
       e.preventDefault();
       const title = inputGoalTitle.value.trim();
       const emoji = inputGoalEmoji.value || '🎁';
       const targetAmount = parseRupiahInput(inputGoalTarget.value);
+      const initialAmt = inputGoalInitial ? (parseRupiahInput(inputGoalInitial.value) || 0) : 0;
 
       if (!title || targetAmount <= 0) {
-        showToast('Isi nama impian dan target nominal yang benar ✨', 'error');
+        showToast('Isi nama barang dan target nominal yang benar ✨', 'error');
         return;
       }
 
@@ -826,7 +854,7 @@
         title: title,
         emoji: emoji,
         targetAmount: targetAmount,
-        currentAmount: 0,
+        currentAmount: Math.min(targetAmount, initialAmt),
         createdAt: Date.now()
       });
 
@@ -834,7 +862,7 @@
       renderGoals();
       closeGoalModal();
       triggerCuteConfetti();
-      showToast('Target impian dibuat! 🎯', 'success');
+      showToast('Target barang impian berhasil dibuat! 🎯', 'success');
     });
 
     // Deposit to Goal Events

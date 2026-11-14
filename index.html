@@ -332,7 +332,7 @@
     <div class="modal-card bg-white dark:bg-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-xl border border-pink-100 dark:border-slate-700">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
-          <span>🌟</span> Target Impian Baru
+          <span>🎯</span> Mau Beli Apa? (Target Impian)
         </h3>
         <button id="btnCloseGoalModal" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors cursor-pointer text-xs">
           <i class="fa-solid fa-xmark"></i>
@@ -341,34 +341,51 @@
 
       <form id="goalForm" class="space-y-3">
         <div>
-          <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Nama Target</label>
-          <input type="text" id="goalTitle" placeholder="Misal: Beli Sepatu, Liburan..." required class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+          <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Nama Barang / Impian</label>
+          <input type="text" id="goalTitle" placeholder="Misal: Sepatu Sneakers 👟, iPhone 📱..." required class="w-full px-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+          
+          <!-- Inspirasi Cepat -->
+          <div class="flex flex-wrap gap-1 mt-1.5">
+            <button type="button" class="preset-chip text-[10px] px-2 py-0.5 rounded-lg bg-pink-50 dark:bg-slate-700 text-pink-600 dark:text-pink-300 font-semibold cursor-pointer hover:bg-pink-100" data-name="Beli Sepatu Sneakers" data-emoji="👟">👟 Sepatu</button>
+            <button type="button" class="preset-chip text-[10px] px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-slate-700 text-sky-600 dark:text-sky-300 font-semibold cursor-pointer hover:bg-sky-100" data-name="Beli HP Baru" data-emoji="📱">📱 HP</button>
+            <button type="button" class="preset-chip text-[10px] px-2 py-0.5 rounded-lg bg-pink-50 dark:bg-slate-700 text-pink-600 dark:text-pink-300 font-semibold cursor-pointer hover:bg-pink-100" data-name="Beli Skincare" data-emoji="💄">💄 Skincare</button>
+            <button type="button" class="preset-chip text-[10px] px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-slate-700 text-sky-600 dark:text-sky-300 font-semibold cursor-pointer hover:bg-sky-100" data-name="Liburan Impian" data-emoji="✈️">✈️ Liburan</button>
+          </div>
         </div>
 
         <div>
-          <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Ikon</label>
+          <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Pilih Ikon</label>
           <div class="flex gap-1.5 flex-wrap" id="goalEmojiPicker">
             <button type="button" class="emoji-btn active" data-emoji="🎁">🎁</button>
+            <button type="button" class="emoji-btn" data-emoji="👟">👟</button>
             <button type="button" class="emoji-btn" data-emoji="📱">📱</button>
             <button type="button" class="emoji-btn" data-emoji="💄">💄</button>
             <button type="button" class="emoji-btn" data-emoji="✈️">✈️</button>
-            <button type="button" class="emoji-btn" data-emoji="👟">👟</button>
+            <button type="button" class="emoji-btn" data-emoji="🎧">🎧</button>
             <button type="button" class="emoji-btn" data-emoji="🐱">🐱</button>
           </div>
           <input type="hidden" id="goalEmoji" value="🎁">
         </div>
 
         <div>
-          <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Target Nominal (Rp)</label>
+          <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Target Harga Barang (Rp)</label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">Rp</span>
             <input type="text" id="goalTargetAmount" inputmode="numeric" placeholder="0" required class="w-full pl-9 pr-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
           </div>
         </div>
 
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Uang yang Sudah Terkumpul Saat Ini (Opsional)</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">Rp</span>
+            <input type="text" id="goalInitialAmount" inputmode="numeric" placeholder="0" class="w-full pl-9 pr-3 py-2 rounded-xl bg-pink-50/30 dark:bg-slate-900 border border-pink-200/80 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-pink-400">
+          </div>
+        </div>
+
         <div class="flex gap-2 pt-1">
           <button type="button" id="btnCancelGoal" class="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs cursor-pointer">Batal</button>
-          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-[#f472b6] to-[#38bdf8] text-white font-bold text-xs shadow-xs cursor-pointer">Simpan ✨</button>
+          <button type="submit" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-[#f472b6] to-[#38bdf8] text-white font-bold text-xs shadow-xs cursor-pointer">Simpan Target ✨</button>
         </div>
       </form>
     </div>
