@@ -25,37 +25,27 @@
 
   const todayISO = new Date().toISOString().split('T')[0];
 
-  // Data demo bawaan awal yang ramah & mencerminkan tabungan
+  // Data demo bawaan awal yang simpel & realistis
   const DEFAULT_TRANSACTIONS = [
     {
       id: 'tx-1',
       type: 'income',
-      amount: 2500000,
+      amount: 100000,
       category: 'allowance',
       categoryLabel: '🧧 Uang Saku / Kiriman',
-      notes: 'Uang bulanan tersayang 🥰',
+      notes: 'Uang jajan & tabungan 🥰',
       date: todayISO,
       createdAt: Date.now() - 3600000 * 24
-    },
-    {
-      id: 'tx-2',
-      type: 'expense',
-      amount: 45000,
-      category: 'food',
-      categoryLabel: '🍰 Makanan & Jajan',
-      notes: 'Beli kopi & cheesecake 🍰',
-      date: todayISO,
-      createdAt: Date.now() - 3600000 * 5
     }
   ];
 
   const DEFAULT_GOALS = [
     {
       id: 'goal-1',
-      title: 'Beli Sepatu Lucu 👟',
+      title: 'Beli Sepatu Sneakers 👟',
       emoji: '👟',
-      targetAmount: 500000,
-      currentAmount: 200000,
+      targetAmount: 300000,
+      currentAmount: 0,
       createdAt: Date.now()
     }
   ];
@@ -276,7 +266,7 @@
   }
 
   // --- CORE LOGIC: Tabungan = Pemasukan - Pengeluaran ---
-  function updateSummary() {
+  function getFinancialTotals() {
     let income = 0;
     let expense = 0;
 
@@ -289,8 +279,12 @@
       }
     });
 
-    // Pemasukan menambah tabungan, pengeluaran memotong tabungan
     const currentSavings = income - expense;
+    return { income, expense, currentSavings };
+  }
+
+  function updateSummary() {
+    const { income, expense, currentSavings } = getFinancialTotals();
 
     elTotalIncome.textContent = formatRupiah(income);
     elTotalExpense.textContent = formatRupiah(expense);
@@ -300,28 +294,36 @@
     if (currentSavings > 0) {
       savingsStatusText.textContent = 'Tabungan Sehat 🌸';
     } else if (currentSavings === 0) {
-      savingsStatusText.textContent = 'Yuk Mulai Menabung! ✨';
+      savingsStatusText.textContent = 'Yuk Catat Pemasukan! ✨';
     } else {
       savingsStatusText.textContent = 'Tabungan Minus 🥺';
     }
   }
 
-  // --- Target Celengan Impian (Mau Beli Apa & Sisa Berapa Lagi) ---
+  // --- Target Celengan Impian (Otomatis Terisi dari Tabungan) ---
   function renderGoals() {
     goalsContainer.innerHTML = '';
     if (goals.length === 0) {
       goalsContainer.innerHTML = `
-        <div class="p-3.5 rounded-2xl bg-pink-50/30 dark:bg-slate-900 border border-pink-100/70 dark:border-slate-700/60 text-center">
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Belum ada target impian.</p>
-          <p class="text-[11px] text-[#ec4899] font-semibold mt-0.5">Klik "+ Tambah" untuk mencatat barang yang mau kamu beli!</p>
+        <div class="p-4 rounded-2xl bg-pink-50/40 dark:bg-slate-900 border-2 border-dashed border-pink-200 dark:border-slate-700 text-center">
+          <p class="text-xs text-slate-600 dark:text-slate-400 font-bold">Belum ada target impian.</p>
+          <p class="text-[11px] text-[#e11d48] font-extrabold mt-0.5">Klik "+ Tambah" di atas untuk mencatat barang yang mau kamu beli!</p>
         </div>
       `;
       return;
     }
 
-    goals.forEach(goal => {
-      const percentage = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) || 0;
+    const { currentSavings } = getFinancialTotals();
+    let availableSavings = Math.max(0, currentSavings);
+
+    goals.forEach((goal, idx) => {
+      // Tabungan yang kamu miliki otomatis mengisi target ini
+      const allocated = Math.min(goal.targetAmount, availableSavings);
+      availableSavings = Math.max(0, availableSavings - allocated);
+      goal.currentAmount = allocated;
+
       const remaining = Math.max(0, goal.targetAmount - goal.currentAmount);
+      const percentage = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) || 0;
       const isReached = goal.currentAmount >= goal.targetAmount;
 
       const card = document.createElement('div');
@@ -335,6 +337,7 @@
               <h4 class="text-xs font-extrabold text-slate-800 dark:text-slate-100 truncate flex items-center gap-1.5">
                 <span>${escapeHtml(goal.title)}</span>
                 ${isReached ? '<span class="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold px-2 py-0.5 rounded-md shrink-0">Tercapai! 🎉</span>' : ''}
+                ${idx === 0 && goals.length > 1 ? '<span class="text-[9px] bg-sky-100 text-[#0284c7] font-bold px-1.5 py-0.5 rounded-md shrink-0">Prioritas 1 🌟</span>' : ''}
               </h4>
               <p class="text-[11px] text-slate-500 font-semibold mt-0.5">
                 Target Harga: <span class="font-extrabold text-[#e11d48] dark:text-pink-300">${formatRupiah(goal.targetAmount)}</span>
@@ -342,8 +345,8 @@
             </div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
-            <button class="btn-deposit-goal px-3 py-1.5 bg-[#0284c7] hover:bg-[#0369a1] text-white rounded-xl text-xs font-extrabold transition-all active:scale-95 cursor-pointer shadow-xs">
-              + Sisihkan
+            <button class="btn-deposit-goal px-3 py-1.5 bg-[#0284c7] hover:bg-[#0369a1] text-white rounded-xl text-xs font-extrabold transition-all active:scale-95 cursor-pointer shadow-xs" data-id="${escapeHtml(goal.id)}" data-title="${escapeHtml(goal.title)}" title="Isi tabungan untuk barang ini">
+              + Isi Tabungan
             </button>
             <button class="btn-delete-goal p-1 text-slate-300 hover:text-rose-500 rounded-lg text-xs transition-colors cursor-pointer" data-id="${escapeHtml(goal.id)}" title="Hapus target">
               <i class="fa-regular fa-trash-can"></i>
@@ -375,7 +378,14 @@
     });
 
     goalsContainer.querySelectorAll('.btn-deposit-goal').forEach(btn => {
-      btn.addEventListener('click', () => openDepositModal(btn.getAttribute('data-id')));
+      btn.addEventListener('click', () => {
+        const title = btn.getAttribute('data-title');
+        // Arahkan langsung ke form pemasukan agar uang masuk otomatis mengisi target!
+        tabIncome.click();
+        inputTxNotes.value = 'Tabungan untuk ' + title;
+        inputTxAmount.focus();
+        showToast('Masukkan nominal pemasukan untuk ' + title + ' 🌸', 'info');
+      });
     });
 
     goalsContainer.querySelectorAll('.btn-delete-goal').forEach(btn => {
@@ -788,9 +798,19 @@
 
       if (type === 'income') {
         triggerCuteConfetti();
-        showToast('Tabungan bertambah! 💵✨', 'success');
+        if (goals.length > 0) {
+          const topGoal = goals[0];
+          const remaining = Math.max(0, topGoal.targetAmount - topGoal.currentAmount);
+          if (remaining > 0) {
+            showToast(`Pemasukan +${formatRupiah(amount)}! Sisa target ${topGoal.title} berkurang (sisa ${formatRupiah(remaining)} lagi) 🎯✨`, 'success');
+          } else {
+            showToast(`Tabungan bertambah +${formatRupiah(amount)}! Target ${topGoal.title} sudah tercapai 🎉`, 'success');
+          }
+        } else {
+          showToast(`Tabungan bertambah +${formatRupiah(amount)}! 💵✨`, 'success');
+        }
       } else {
-        showToast('Pengeluaran dicatat (memotong tabungan) 📝', 'info');
+        showToast(`Pengeluaran dicatat -${formatRupiah(amount)} (memotong tabungan) 📝`, 'info');
       }
 
       inputTxAmount.value = '';
